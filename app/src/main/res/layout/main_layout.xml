@@ -5,13 +5,15 @@
 
 
     android:layout_width="match_parent"
-    android:layout_height="681dp">
+    android:layout_height="wrap_content">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appbar"
 
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:background="#C6AEAE"
+        android:gravity="top">
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
@@ -25,7 +27,7 @@
                 android:id="@+id/constrain"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="#C10000"
+                android:background="#C6AEAE"
                 android:backgroundTint="#C6AEAE">
 
                 <ImageButton
