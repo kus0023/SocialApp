@@ -46,6 +46,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -146,6 +147,8 @@ public class RegisterFragment extends Fragment {
             @Override
             public void onClick(View v) {
 
+
+
                 String fname = et_fname.getText().toString();
                 String lname = et_lname.getText().toString();
                 String emailid = et_username.getText().toString();
@@ -203,6 +206,7 @@ public class RegisterFragment extends Fragment {
 
 
 
+
             }
         });
 
@@ -210,7 +214,7 @@ public class RegisterFragment extends Fragment {
         return view;
     }
 
-    private String getPhotoPathFromDb(Uri uri, String lastname) {
+    private String getPhotoPathFromDb(Uri uri, final String lastname) {
         if(uri==null){
             if(lastname.equals("profile")){
                 uri = Uri.parse("android.resource://"+getActivity().getApplicationContext().getPackageName()+"/drawable/avatar");
@@ -240,21 +244,33 @@ public class RegisterFragment extends Fragment {
         })
         .addOnCompleteListener(new OnCompleteListener<Uri>() {
             @Override
-            public void onComplete(@NonNull Task<Uri> task) {
+            public void onComplete(final @NonNull Task<Uri> task) {
 
-                /*
-                user-info
-                    utsav1
-                        name
-                 */
-                DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("user_info").child(temp[0]);
-                Map<String, Object> updatevalue = new ArrayMap<>();
-                updatevalue.put(name, task.getResult());
-                databaseReference.setValue(updatevalue);
+                if(task.getResult()!=null) {
+                    final DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("user_info").child(temp[0]);
+                    databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            Map<String, Object> update = new HashMap<>();
+                            for(DataSnapshot s : snapshot.getChildren()){
+                                update.put(s.getKey(), s.getValue());
+                            }
+                            update.put(lastname, task.getResult().toString());
+                            databaseReference.updateChildren(update);
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });
 
 
-                Log.d(TAG, "result url: "+sb.toString());
-                Toast.makeText(getContext(), "File uploaded", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "File uploaded", Toast.LENGTH_SHORT).show();
+                }
+                else {
+                    Toast.makeText(getContext(), "File Not Uploaded", Toast.LENGTH_SHORT).show();
+                }
 
             }
         });
@@ -307,7 +323,6 @@ public class RegisterFragment extends Fragment {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for(DataSnapshot s : snapshot.getChildren()){
-
                     list.add(s.getKey());
                 }
             }

@@ -22,7 +22,7 @@ public class MainHomeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main_home);
 
         drawer=findViewById(R.id.drawer);
-        toolbar=findViewById(R.id.tv);
+//        toolbar=findViewById(R.id.tv);
 
         adt=new ActionBarDrawerToggle(this,drawer,toolbar,R.string.Open,R.string.Close);
         adt.syncState();
