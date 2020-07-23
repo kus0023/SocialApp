@@ -2,98 +2,105 @@ package com.example.socialapp;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.BaseAdapter;
-import android.widget.CursorAdapter;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
 public class UserpostActivity extends AppCompatActivity {
 
-    private ListView lv;
+    private RecyclerView rv;
     private DatabaseReference dref;
     private String list;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_userpost);
-        lv=findViewById(R.id.postlistview);
-        /*dref= FirebaseDatabase.getInstance().getReference();
-        dref.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
+        rv = findViewById(R.id.recyclerView2);
+        rv.setLayoutManager(new LinearLayoutManager(this));
 
-            }
+        List<Post_model> list = getList();
+        MyAdapter adp = new MyAdapter(list);
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
+        rv.setAdapter(adp);
 
-            }
-        })
-*/
-        final List<Post_model> list=getList();
-
-       // CursorAdapter adp=new CustomAdapter(list);
-
-       // lv.setAdapter(adp);
-
-        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Toast.makeText(UserpostActivity.this, "post selected", Toast.LENGTH_SHORT).show();
-            }
-        });
     }
 
+    class MyViewHolder extends RecyclerView.ViewHolder{
+        TextView fname;
+        TextView lname;
+        TextView date;
+        TextView time;
+        ImageView post_photo;
+        TextView caption;
+        ImageButton like;
 
-        class CustomAdapter extends BaseAdapter{
-
-        @Override
-        public int getCount() {
-            return 0;
-        }
-
-        @Override
-        public Object getItem(int i) {
-            return null;
-        }
-
-        @Override
-        public long getItemId(int i) {
-            return 0;
-        }
-
-        @Override
-        public View getView(int i, View view, ViewGroup viewGroup) {
-            View v=getLayoutInflater().inflate(R.layout.post_item,viewGroup,false);
-            ImageView iv=v.findViewById(R.id.postimage);
-            TextView tv=v.findViewById(R.id.postcaption);
-            ImageButton ib=v.findViewById(R.id.likeib);
-            return v;
+        public MyViewHolder(@NonNull View itemView) {
+            super(itemView);
+            fname=itemView.findViewById(R.id.firstname);
+            lname=itemView.findViewById(R.id.lastname);
+             date=itemView.findViewById(R.id.textView3);
+             time=itemView.findViewById(R.id.textView8);
+             post_photo=itemView.findViewById(R.id.postimage);
+             caption=itemView.findViewById(R.id.postcaption);
+             like=itemView.findViewById(R.id.likeib);
         }
     }
+    class MyAdapter extends RecyclerView.Adapter<MyViewHolder>{
+        private List<Post_model> list;
 
-    private List<Post_model> getList(){
+        MyAdapter(List<Post_model> list) {
+            this.list = list;
+        }
+
+        @NonNull
+        @Override
+        public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+            View v=getLayoutInflater().inflate(R.layout.post_item,parent,false);
+            MyViewHolder myViewHolder=new MyViewHolder(v);
+            return myViewHolder;
+        }
+
+        @Override
+        public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
+            Post_model post_model=list.get(position);
+            holder.fname.setText(post_model.getFirstname());
+            holder.lname.setText(post_model.getLastname());
+            holder.date.setText(post_model.getDate());
+            holder.time.setText(post_model.getTime());
+            holder.post_photo.setImageResource(post_model.getImage());
+            holder.caption.setText(post_model.getCaption());
+            holder.like.setBackground(getResources().getDrawable(R.drawable.common_google_signin_btn_icon_light));
+
+        }
+
+        @Override
+        public int getItemCount() {
+            return list.size();
+        }
+    }
+ private  List<Post_model> getList(){
         List<Post_model> list=new ArrayList<>();
-        list.add(new Post_model("","caption"));
-        return list;
+        list.add(new Post_model("Avantika", "Avantika","verma",R.drawable.avatargirl,100,"no caption","01/02/2020","1 min ago"));
+        list.add(new Post_model("Utsav", "Utsav","singh",R.drawable.avatarboy,200,"no caption","01/02/2020","1 min ago"));
+        list.add(new Post_model("shweta", "shweta","singh",R.drawable.avatargirl,0,"no caption","01/02/2020","1 min ago"));
+        list.add(new Post_model("shweta", "shweta","singh",R.drawable.avatarboy,0,"no caption","01/02/2020","1 min ago"));
+     return list;
     }
+
 }

@@ -1,17 +1,19 @@
 package com.example.socialapp;
 
 public class Post_model {
-    private String image;
+    private String userid;
+    private String firstname;
+    private String lastname;
+    private int image;
     private int likes;
     private String caption;
     private String Date;
     private String Time;
 
-    public String getImage() {
-        return image;
-    }
-
-    public Post_model(String image, int likes, String caption, String date, String time) {
+    public Post_model(String userid, String firstname, String lastname, int image, int likes, String caption, String date, String time) {
+        this.userid = userid;
+        this.firstname = firstname;
+        this.lastname = lastname;
         this.image = image;
         this.likes = likes;
         this.caption = caption;
@@ -19,12 +21,38 @@ public class Post_model {
         Time = time;
     }
 
-    public Post_model(String image,String caption){
-        this.image = image;
-        this.caption = caption;
 
+
+    public int getImage() {
+        return image;
     }
-    public void setImage(String image) {
+
+    public String getUserid() {
+        return userid;
+    }
+
+    public void setUserid(String userid) {
+        this.userid = userid;
+    }
+
+    public String getFirstname() {
+        return firstname;
+    }
+
+    public void setFirstname(String firstname) {
+        this.firstname = firstname;
+    }
+
+    public String getLastname() {
+        return lastname;
+    }
+
+    public void setLastname(String lastname) {
+        this.lastname = lastname;
+    }
+
+
+    public void setImage(int image) {
         this.image = image;
     }
 
