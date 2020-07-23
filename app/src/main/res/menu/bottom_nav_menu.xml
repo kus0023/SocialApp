@@ -6,7 +6,9 @@
     <item
         android:icon="@drawable/ic_baseline_account_circle_24"
         android:title="Profile" />
-    <item android:title="List Of Friends" />
+    <item
+        android:icon="@drawable/ic_baseline_list_alt_24"
+        android:title="List Of Friends" />
     <item
         android:icon="@drawable/ic_baseline_settings_24"
         android:title="Setting" />
