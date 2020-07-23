@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 
 public class HomeActivity extends AppCompatActivity {
@@ -20,24 +21,36 @@ public class HomeActivity extends AppCompatActivity {
     private SharedPreferences sharedPreferences;
     private SharedPreferences.Editor editor;
     private FirebaseAuth auth;
+    private FloatingActionButton addPost;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
-        logOut = findViewById(R.id.btn_home_logout);
         sharedPreferences = getSharedPreferences("UserInformation", MODE_PRIVATE);
         auth = FirebaseAuth.getInstance();
+        addPost = findViewById(R.id.floatingActionButton);
         pd = new ProgressDialog(this);
         pd.setTitle("signing out");
 
 
-        logOut.setOnClickListener(new View.OnClickListener() {
+//        logOut.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                signOut();
+//            }
+//        });
+
+        addPost.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                signOut();
+
+                Intent intent = new Intent(HomeActivity.this, AddUserPostActivity.class);
+                startActivity(intent);
             }
         });
+
+
 
     }
 

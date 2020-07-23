@@ -11,8 +11,9 @@
     <include android:layout_height="match_parent"
         android:layout_width="match_parent"
         layout="@layout/main_layout">
-
     </include>
+
+
     <com.google.android.material.navigation.NavigationView
         android:id="@+id/nav_view"
         android:layout_width="match_parent"

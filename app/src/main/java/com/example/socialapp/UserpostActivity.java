@@ -79,11 +79,9 @@ public class UserpostActivity extends AppCompatActivity {
         @Override
         public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
             Post_model post_model=list.get(position);
-            holder.fname.setText(post_model.getFirstname());
-            holder.lname.setText(post_model.getLastname());
             holder.date.setText(post_model.getDate());
             holder.time.setText(post_model.getTime());
-            holder.post_photo.setImageResource(post_model.getImage());
+//            holder.post_photo.setImageResource(post_model.getImage());
             holder.caption.setText(post_model.getCaption());
             holder.like.setBackground(getResources().getDrawable(R.drawable.common_google_signin_btn_icon_light));
 
@@ -96,10 +94,8 @@ public class UserpostActivity extends AppCompatActivity {
     }
  private  List<Post_model> getList(){
         List<Post_model> list=new ArrayList<>();
-        list.add(new Post_model("Avantika", "Avantika","verma",R.drawable.avatargirl,100,"no caption","01/02/2020","1 min ago"));
-        list.add(new Post_model("Utsav", "Utsav","singh",R.drawable.avatarboy,200,"no caption","01/02/2020","1 min ago"));
-        list.add(new Post_model("shweta", "shweta","singh",R.drawable.avatargirl,0,"no caption","01/02/2020","1 min ago"));
-        list.add(new Post_model("shweta", "shweta","singh",R.drawable.avatarboy,0,"no caption","01/02/2020","1 min ago"));
+        list.add(new Post_model("Avantika","",100,"no caption","01/02/2020","1 min ago"));
+
      return list;
     }
 
