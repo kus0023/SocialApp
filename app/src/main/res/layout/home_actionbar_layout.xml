@@ -6,7 +6,7 @@
     android:layout_height="wrap_content"
     android:background="#DAE84D"
     android:backgroundTint="#C55E5E"
-    android:gravity="bottom"
+    android:gravity="bottom|right"
     android:orientation="vertical"
     android:padding="12dp">
 
@@ -22,5 +22,6 @@
         android:layout_height="wrap_content"
         android:gravity="bottom"
         android:text="TextView"
+        android:textAlignment="textEnd"
         android:textSize="24sp" />
 </LinearLayout>

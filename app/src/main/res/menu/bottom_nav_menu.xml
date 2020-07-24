@@ -4,14 +4,21 @@
 
 
     <item
+        android:id="@+id/menu_profile"
         android:icon="@drawable/ic_baseline_account_circle_24"
         android:title="Profile" />
     <item
+        android:id="@+id/posts_list"
         android:icon="@drawable/ic_baseline_list_alt_24"
-        android:title="List Of Friends" />
+        android:title="Your Post" />
     <item
+        android:id="@+id/setting"
         android:icon="@drawable/ic_baseline_settings_24"
-        android:title="Setting" />
+        android:title="Settings" />
+    <item
+        android:id="@+id/logout"
+        android:icon="@drawable/ic_baseline_exit_to_app_24"
+        android:title="Logout" />
 </menu>
 
 
