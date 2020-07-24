@@ -107,7 +107,7 @@ public class UserpostActivity extends AppCompatActivity {
     private  List<Post_model> getList(){
         final List<Post_model> list=new ArrayList<>();
         FirebaseAuth auth = FirebaseAuth.getInstance();
-        String userid = auth.getCurrentUser().getProviderId().split("@")[0];
+        String userid = auth.getCurrentUser().getEmail().split("@")[0];
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("user_post").child(userid);
         reference.addValueEventListener(new ValueEventListener() {
             @Override
@@ -122,10 +122,11 @@ public class UserpostActivity extends AppCompatActivity {
             }
         });
 
-        for(Post_model p: list)
-        Log.d("ListValue", p.getCaption());
+
 
         return list;
     }
+
+
 
 }
