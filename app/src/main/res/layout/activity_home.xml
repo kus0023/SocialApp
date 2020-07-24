@@ -54,6 +54,5 @@
         android:layout_gravity="bottom|end"
         android:layout_margin="16dp"
         android:background="@drawable/ic_baseline_add_24"
-        android:src="@drawable/ic_baseline_add_24" />"
-
+        android:src="@drawable/ic_baseline_add_24" />
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

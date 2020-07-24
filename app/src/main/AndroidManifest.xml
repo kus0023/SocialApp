@@ -15,6 +15,7 @@
         <activity android:name=".DashboardActivity">
 
         </activity>
+        <activity android:name=".EditUserInfoActivity"/>
         <activity android:name=".AddUserPostActivity" />
         <activity android:name=".DetailActivity" />
         <activity android:name=".UserpostActivity" />
