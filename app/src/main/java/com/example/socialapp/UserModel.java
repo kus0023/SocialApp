@@ -25,7 +25,6 @@ public class UserModel {
         this.background = background;
     }
 
-
     public String getFname() {
         return fname;
     }
