@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -50,9 +51,13 @@ public class MyProfileActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 UserModel um=snapshot.getValue(UserModel.class);
-                name.setText(um.getFname());
+                name.setText(um.getFname()+" "+um.getLname());
                 email.setText(um.getEmail());
                 phone.setText(um.getPhone());
+                Glide.with(getApplicationContext())
+                        .load(um.getProfile()).into(profile);
+                Glide.with(getApplicationContext())
+                        .load(um.getBackground()).into(backprofile);
                 
             }
 

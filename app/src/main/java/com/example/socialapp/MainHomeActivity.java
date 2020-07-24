@@ -15,6 +15,8 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -44,6 +46,8 @@ public class MainHomeActivity extends AppCompatActivity implements NavigationVie
     private String list;
     private FloatingActionButton addPost;
 
+    private ImageButton user;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,6 +56,7 @@ public class MainHomeActivity extends AppCompatActivity implements NavigationVie
         nav_view = findViewById(R.id.nav_view);
         drawer=findViewById(R.id.drawer);
         toolbar=findViewById(R.id.toolbar);
+        user = findViewById(R.id.imageButton6);
 
 
         adt=new ActionBarDrawerToggle(this,drawer,toolbar,R.string.open,R.string.close);
@@ -62,6 +67,11 @@ public class MainHomeActivity extends AppCompatActivity implements NavigationVie
         rv = findViewById(R.id.rview);
         rv.setLayoutManager(new LinearLayoutManager(this));
         addPost = findViewById(R.id.faddpost);
+
+
+
+
+
 
         addPost.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -91,29 +101,30 @@ public class MainHomeActivity extends AppCompatActivity implements NavigationVie
         });
 
 
+        DatabaseReference db = FirebaseDatabase.getInstance().getReference("user_info").child(userid);
+        db.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                UserModel u = snapshot.getValue(UserModel.class);
+                Glide.with(getApplicationContext()).load(u.getProfile()).into(user);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+
     }
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()){
-            case R.id.menu_profile:
-                Intent i = new Intent(this, MyProfileActivity.class);
-                startActivity(i);
-                break;
-            case R.id.posts_list:
-                Intent j = new Intent(this, UserpostActivity.class);
-                startActivity(j);
-                break;
-            case R.id.setting:
-                Toast.makeText(this, "You have clicked Settings", Toast.LENGTH_SHORT).show();
-                break;
 
-            case R.id.logout:
-                signOut();
-                break;
-        }
-        return false;
+        return true;
     }
+
 
     class MyViewHolder extends RecyclerView.ViewHolder{
         TextView fname;
