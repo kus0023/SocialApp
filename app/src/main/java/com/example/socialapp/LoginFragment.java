@@ -101,7 +101,7 @@ public class LoginFragment extends Fragment {
                         editor.apply();
 
                         Toast.makeText(getContext(), "Welcome", Toast.LENGTH_SHORT).show();
-                        Intent intent = new Intent(getContext(), MainHomeActivity.class);
+                        Intent intent = new Intent(getContext(), DashboardActivity.class);
                         startActivity(intent);
                         pd.dismiss();
                         Objects.requireNonNull(getActivity()).finish();
