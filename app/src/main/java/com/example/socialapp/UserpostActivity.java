@@ -33,7 +33,7 @@ public class UserpostActivity extends AppCompatActivity {
 
     private RecyclerView rv;
     private DatabaseReference dref;
-    private String list;
+    private List<Post_model> list;
 
 
     @Override
@@ -41,16 +41,35 @@ public class UserpostActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_userpost);
         rv = findViewById(R.id.recyclerView2);
+
+
         rv.setLayoutManager(new LinearLayoutManager(this));
+        Log.d("test-list-come", "activity started");
 
-        List<Post_model> list = getList();
-        MyAdapter adp = new MyAdapter(list);
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        String userid = auth.getCurrentUser().getEmail().split("@")[0];
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("user_post").child(userid);
 
-        rv.setAdapter(adp);
+        reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                list = getList();
+                MyAdapter adp = new MyAdapter(list);
+
+                rv.setAdapter(adp);
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+                Toast.makeText(UserpostActivity.this, "No item found", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+
 
     }
 
-    class MyViewHolder extends RecyclerView.ViewHolder{
+    static class MyViewHolder extends RecyclerView.ViewHolder{
         TextView fname;
         TextView date;
         TextView time;
@@ -79,8 +98,7 @@ public class UserpostActivity extends AppCompatActivity {
         @Override
         public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
             View v=getLayoutInflater().inflate(R.layout.post_item,parent,false);
-            MyViewHolder myViewHolder=new MyViewHolder(v);
-            return myViewHolder;
+            return new MyViewHolder(v);
         }
 
         @Override
@@ -94,7 +112,6 @@ public class UserpostActivity extends AppCompatActivity {
             Glide.with(getApplicationContext())
                     .load(post_model.getImage())
                     .into(holder.photo);
-
         }
 
         @Override
@@ -105,6 +122,7 @@ public class UserpostActivity extends AppCompatActivity {
 
 
     private  List<Post_model> getList(){
+        Log.d("test-list-come", "Into list function");
         final List<Post_model> list=new ArrayList<>();
         FirebaseAuth auth = FirebaseAuth.getInstance();
         String userid = auth.getCurrentUser().getEmail().split("@")[0];
@@ -112,8 +130,13 @@ public class UserpostActivity extends AppCompatActivity {
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                Post_model p = snapshot.getValue(Post_model.class);
-                list.add(p);
+
+                for(DataSnapshot s: snapshot.getChildren()){
+                    Post_model p =  s.getValue(Post_model.class);
+                    list.add(p);
+                    Log.d("test-list-come", s.getKey());
+                }
+                rv.setAdapter(new MyAdapter(list));
             }
 
             @Override
@@ -122,11 +145,6 @@ public class UserpostActivity extends AppCompatActivity {
             }
         });
 
-
-
         return list;
     }
-
-
-
 }
