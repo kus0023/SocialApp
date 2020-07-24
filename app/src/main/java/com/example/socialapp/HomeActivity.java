@@ -30,7 +30,7 @@ public class HomeActivity extends AppCompatActivity {
         sharedPreferences = getSharedPreferences("UserInformation", MODE_PRIVATE);
 //        logOut =findViewById(R.id.logout);
         auth = FirebaseAuth.getInstance();
-        addPost = findViewById(R.id.floatingActionButton);
+        addPost = findViewById(R.id.faddpost);
         pd = new ProgressDialog(this);
         pd.setTitle("signing out");
 
