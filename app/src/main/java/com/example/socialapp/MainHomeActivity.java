@@ -66,7 +66,7 @@ public class MainHomeActivity extends AppCompatActivity implements NavigationVie
         addPost.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MainHomeActivity.this, AddUserPostActivity.class);
+                Intent intent = new Intent(MainHomeActivity.this, MyProfileActivity.class);
                 startActivity(intent);
             }
         });
