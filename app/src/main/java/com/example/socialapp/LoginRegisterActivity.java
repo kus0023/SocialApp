@@ -21,7 +21,7 @@ public class LoginRegisterActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login_register);
-        setTitle("App name");
+        setTitle("ChatterBox");
 
         login = findViewById(R.id.btn_login_frg);
         register = findViewById(R.id.btn_reg_frg);
@@ -35,6 +35,13 @@ public class LoginRegisterActivity extends AppCompatActivity {
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    login.setBackgroundColor(getColor(R.color.colorAccent));
+                    login.setTextColor(getColor(R.color.white));
+                    register.setBackgroundColor(getColor(R.color.white));
+                    register.setTextColor(getColor(R.color.colorAccent));
+                }
+
                 getSupportFragmentManager()
                         .beginTransaction()
                         .replace(R.id.fragment, new LoginFragment())
@@ -45,6 +52,14 @@ public class LoginRegisterActivity extends AppCompatActivity {
         register.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    register.setBackgroundColor(getColor(R.color.colorAccent));
+                    register.setTextColor(getColor(R.color.white));
+                    login.setBackgroundColor(getColor(R.color.white));
+                    login.setTextColor(getColor(R.color.colorAccent));
+                }
+
+
                 getSupportFragmentManager()
                         .beginTransaction()
                         .replace(R.id.fragment, new RegisterFragment())

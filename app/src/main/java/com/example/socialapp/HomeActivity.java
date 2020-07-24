@@ -28,6 +28,7 @@ public class HomeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_home);
 
         sharedPreferences = getSharedPreferences("UserInformation", MODE_PRIVATE);
+//        logOut =findViewById(R.id.logout);
         auth = FirebaseAuth.getInstance();
         addPost = findViewById(R.id.floatingActionButton);
         pd = new ProgressDialog(this);

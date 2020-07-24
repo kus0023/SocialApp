@@ -46,7 +46,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/postimage" />
 
             <TextView
-                android:id="@+id/textView9"
+                android:id="@+id/like_tv"
                 style="@style/Theme.AppCompat.DayNight.NoActionBar"
                 android:layout_width="34dp"
                 android:layout_height="31dp"
@@ -63,7 +63,7 @@
                 android:layout_height="31dp"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
-                app:layout_constraintStart_toEndOf="@+id/textView9"
+                app:layout_constraintStart_toEndOf="@+id/like_tv"
                 app:layout_constraintTop_toBottomOf="@+id/postcaption"
                 app:srcCompat="@android:drawable/ic_menu_crop" />
 

@@ -10,7 +10,9 @@
         android:id="@+id/btn_login_frg"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:background="@color/colorAccent"
         android:text="Login"
+        android:textColor="@color/white"
         app:layout_constraintEnd_toStartOf="@+id/btn_reg_frg"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -19,7 +21,9 @@
         android:id="@+id/btn_reg_frg"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:background="@color/white"
         android:text="Register"
+        android:textColor="@color/colorAccent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/btn_login_frg"
         app:layout_constraintTop_toTopOf="parent" />

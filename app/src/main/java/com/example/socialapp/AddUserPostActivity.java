@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -42,6 +43,7 @@ public class AddUserPostActivity extends AppCompatActivity {
     Uri uri;
     FirebaseAuth auth ;
     String image = "";
+    ProgressDialog pd;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,6 +55,7 @@ public class AddUserPostActivity extends AppCompatActivity {
         iv = findViewById(R.id.img_post);
         iv.setVisibility(View.INVISIBLE);
         auth = FirebaseAuth.getInstance();
+        pd = new ProgressDialog(this);
 
         choose.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -67,6 +70,7 @@ public class AddUserPostActivity extends AppCompatActivity {
         post.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                pd.show();
 
                 final String userid = auth.getCurrentUser().getEmail().split("@")[0];
                 String caption = tv.getText().toString();
@@ -103,11 +107,16 @@ public class AddUserPostActivity extends AppCompatActivity {
                                     }
                                     updated.put("image", ""+task.getResult().toString());
                                     reference.updateChildren(updated);
+                                    pd.dismiss();
+                                    Toast.makeText(AddUserPostActivity.this, "Posted...", Toast.LENGTH_SHORT).show();
+                                    finish();
                                 }
 
                                 @Override
                                 public void onCancelled(@NonNull DatabaseError error) {
 
+                                    Toast.makeText(AddUserPostActivity.this, "Error in uploading: "+ error.getMessage(), Toast.LENGTH_SHORT).show();
+                                    pd.dismiss();
                                 }
                             });
                         }

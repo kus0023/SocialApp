@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -15,7 +16,15 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,22 +52,20 @@ public class UserpostActivity extends AppCompatActivity {
 
     class MyViewHolder extends RecyclerView.ViewHolder{
         TextView fname;
-        TextView lname;
         TextView date;
         TextView time;
-        ImageView post_photo;
+        ImageView photo;
         TextView caption;
-        ImageButton like;
+        TextView like;
 
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
             fname=itemView.findViewById(R.id.firstname);
-            lname=itemView.findViewById(R.id.lastname);
              date=itemView.findViewById(R.id.textView3);
              time=itemView.findViewById(R.id.textView8);
-             post_photo=itemView.findViewById(R.id.postimage);
+             photo=itemView.findViewById(R.id.postimage);
              caption=itemView.findViewById(R.id.postcaption);
-             like=itemView.findViewById(R.id.likeib);
+             like=itemView.findViewById(R.id.like_tv);
         }
     }
     class MyAdapter extends RecyclerView.Adapter<MyViewHolder>{
@@ -81,9 +88,12 @@ public class UserpostActivity extends AppCompatActivity {
             Post_model post_model=list.get(position);
             holder.date.setText(post_model.getDate());
             holder.time.setText(post_model.getTime());
-//            holder.post_photo.setImageResource(post_model.getImage());
             holder.caption.setText(post_model.getCaption());
-            holder.like.setBackground(getResources().getDrawable(R.drawable.common_google_signin_btn_icon_light));
+            holder.fname.setText(post_model.getUserid());
+
+            Glide.with(getApplicationContext())
+                    .load(post_model.getImage())
+                    .into(holder.photo);
 
         }
 
@@ -92,11 +102,30 @@ public class UserpostActivity extends AppCompatActivity {
             return list.size();
         }
     }
- private  List<Post_model> getList(){
-        List<Post_model> list=new ArrayList<>();
-        list.add(new Post_model("Avantika","",100,"no caption","01/02/2020","1 min ago"));
 
-     return list;
+
+    private  List<Post_model> getList(){
+        final List<Post_model> list=new ArrayList<>();
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        String userid = auth.getCurrentUser().getProviderId().split("@")[0];
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("user_post").child(userid);
+        reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                Post_model p = snapshot.getValue(Post_model.class);
+                list.add(p);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(UserpostActivity.this, "List is not updated due to: "+ error.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        for(Post_model p: list)
+        Log.d("ListValue", p.getCaption());
+
+        return list;
     }
 
 }
