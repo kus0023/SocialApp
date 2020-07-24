@@ -121,6 +121,8 @@ public class EditUserInfoActivity extends AppCompatActivity {
             }
         });
 
+        
+
     }
 
     private boolean islnamechange() {
