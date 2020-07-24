@@ -5,17 +5,32 @@ import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class DashboardActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -23,7 +38,11 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
     private DrawerLayout drawerLayout;
     private Toolbar toolbar;
     private ActionBarDrawerToggle drawerToggle;
-    private FloatingActionButton addpost;
+    private RecyclerView rv;
+    private FloatingActionButton addPost;
+
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,15 +51,18 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
         drawerLayout=findViewById(R.id.drower_layout);
         toolbar=findViewById(R.id.toolbar);
         nav_view=findViewById(R.id.nav_view);
-        addpost=findViewById(R.id.addpost);
+        rv= findViewById(R.id.recyclerView);
+        addPost = findViewById(R.id.addPost);
 
 
         drawerToggle=new ActionBarDrawerToggle(this,drawerLayout,toolbar,R.string.open,R.string.close);
         drawerToggle.syncState();
-
         nav_view.setNavigationItemSelectedListener(this);
 
-        addpost.setOnClickListener(new View.OnClickListener() {
+
+        rv.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+
+        addPost.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
@@ -48,6 +70,25 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
                 startActivity(intent);
             }
         });
+
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        String userid = auth.getCurrentUser().getEmail().split("@")[0];
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("user_post").child(userid);
+        reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                Log.d("list-info", "onDataChange: list is empty?: "+getList().isEmpty());
+
+                rv.setAdapter(new MyAdapter(getList()));
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+                Toast.makeText(DashboardActivity.this, "something wrong", Toast.LENGTH_LONG).show();
+            }
+        });
+
 
 
     }
@@ -73,12 +114,10 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()){
             case R.id.menu_profile:
-                Toast.makeText(this, "profile", Toast.LENGTH_SHORT).show();
                 Intent i=new Intent(DashboardActivity.this,MyProfileActivity.class);
                 startActivity(i);
                 break;
             case R.id.posts_list:
-                Toast.makeText(this, "post_list", Toast.LENGTH_SHORT).show();
                 Intent j=new Intent(DashboardActivity.this,UserpostActivity.class);
                 startActivity(j);
                 break;
@@ -94,5 +133,90 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
         }
         drawerLayout.closeDrawers();
         return false;
+    }
+
+
+
+
+    static class MyViewHolder extends RecyclerView.ViewHolder{
+        TextView fname;
+        TextView date;
+        TextView time;
+        ImageView photo;
+        TextView caption;
+        TextView like;
+
+        public MyViewHolder(@NonNull View itemView) {
+            super(itemView);
+            fname=itemView.findViewById(R.id.firstname);
+            date=itemView.findViewById(R.id.textView3);
+            time=itemView.findViewById(R.id.textView8);
+            photo=itemView.findViewById(R.id.postimage);
+            caption=itemView.findViewById(R.id.postcaption);
+            like=itemView.findViewById(R.id.like_tv);
+        }
+    }
+    class MyAdapter extends RecyclerView.Adapter<MyViewHolder>{
+        private List<Post_model> list;
+
+        MyAdapter(List<Post_model> list) {
+            this.list = list;
+        }
+
+        @NonNull
+        @Override
+        public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+            View v=getLayoutInflater().inflate(R.layout.post_item,parent,false);
+            return new MyViewHolder(v);
+        }
+
+        @Override
+        public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
+            Post_model post_model=list.get(position);
+            holder.date.setText(post_model.getDate());
+            holder.time.setText(post_model.getTime());
+            holder.caption.setText(post_model.getCaption());
+            holder.fname.setText(post_model.getUserid());
+
+            Glide.with(getApplicationContext())
+                    .load(post_model.getImage())
+                    .into(holder.photo);
+        }
+
+        @Override
+        public int getItemCount() {
+            return list.size();
+        }
+    }
+
+
+    private  List<Post_model> getList(){
+        Log.d("list-info", "Into list function");
+        final List<Post_model> list=new ArrayList<>();
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        String userid = auth.getCurrentUser().getEmail().split("@")[0];
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("user_post").child(userid);
+        reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                for(DataSnapshot s: snapshot.getChildren()){
+                    Post_model p =  s.getValue(Post_model.class);
+                    list.add(p);
+                    Log.d("list-info", s.getKey());
+                }
+
+                rv.setAdapter(new MyAdapter(list));
+                Log.d("list-info", "list is Empty? --> final-->"+ list.isEmpty());
+                Log.d("list-info", "adapter is set");
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(getApplicationContext(), "List is not updated due to: "+ error.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        return list;
     }
 }
