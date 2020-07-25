@@ -11,9 +11,6 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import android.provider.MediaStore;
-import android.support.v4.os.ResultReceiver;
-import android.util.ArrayMap;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,7 +22,6 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
-import com.google.android.gms.auth.api.signin.internal.Storage;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -41,7 +37,6 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
-import java.net.URI;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -82,16 +77,16 @@ public class RegisterFragment extends Fragment {
                              Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_register, container, false);
 
-        et_date = view.findViewById(R.id.et_reg_date);
+        et_date = view.findViewById(R.id.et_info_date);
         rb_gender = view.findViewById(R.id.rb_reg_gender);
-        et_mob = view.findViewById(R.id.et_reg_mobile);
+        et_mob = view.findViewById(R.id.et_info_mobile);
         et_pass2 = view.findViewById(R.id.et_reg_pass2);
         et_pass1 = view.findViewById(R.id.et_reg_pass);
         et_username = view.findViewById(R.id.et_reg_email);
-        et_fname = view.findViewById(R.id.et_reg_fname);
-        et_lname = view.findViewById(R.id.et_reg_lname);
+        et_fname = view.findViewById(R.id.et_info_fname);
+        et_lname = view.findViewById(R.id.et_info_lname);
         register = view.findViewById(R.id.btn_reg_frg);
-        iv_profile = view.findViewById(R.id.img_reg_profile);
+        iv_profile = view.findViewById(R.id.img_info_profile);
         iv_back = view.findViewById(R.id.img_reg_back);
         list = new ArrayList<>();
 

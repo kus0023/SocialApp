@@ -49,7 +49,7 @@
                     android:padding="5dp">
 
                     <ImageView
-                        android:id="@+id/img_reg_profile"
+                        android:id="@+id/img_info_profile"
                         android:layout_width="150dp"
                         android:layout_height="150dp"
                         android:background="@drawable/avatar" />
@@ -129,7 +129,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/textInputLayout5">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/et_reg_mobile"
+                    android:id="@+id/et_info_mobile"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="Mobile Number"
@@ -173,7 +173,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/rb_reg_gender">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/et_reg_date"
+                    android:id="@+id/et_info_date"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="Date Of Birth"
@@ -209,7 +209,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/cardview">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/et_reg_fname"
+                    android:id="@+id/et_info_fname"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="First Name" />
@@ -227,7 +227,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/cardview">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/et_reg_lname"
+                    android:id="@+id/et_info_lname"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="Last Name" />
