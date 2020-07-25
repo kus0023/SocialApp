@@ -12,6 +12,7 @@
         android:layout_height="wrap_content"
         android:fontFamily="@font/aclonica"
         android:text="Keep Posting"
+        android:textAlignment="center"
         android:textAppearance="@style/TextAppearance.AppCompat.Display3"
         android:textColor="@android:color/background_light"
         app:layout_constraintBottom_toBottomOf="parent"

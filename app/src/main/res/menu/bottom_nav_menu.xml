@@ -2,7 +2,6 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-
     <item
         android:id="@+id/menu_profile"
         android:icon="@drawable/ic_baseline_account_circle_24"
@@ -11,14 +10,26 @@
         android:id="@+id/posts_list"
         android:icon="@drawable/ic_baseline_list_alt_24"
         android:title="Your Post" />
+
     <item
-        android:id="@+id/setting"
-        android:icon="@drawable/ic_baseline_settings_24"
-        android:title="Settings" />
+        android:id="@+id/all_friends"
+        android:icon="@drawable/ic_baseline_group_24"
+        android:title="All Friends" />
+    <item
+        android:id="@+id/friendReq"
+        android:icon="@drawable/ic_baseline_how_to_reg_24"
+        android:title="Friend Request" />
+    <item
+        android:id="@+id/addFriend"
+        android:icon="@drawable/ic_baseline_person_add_24"
+        android:title="Add New Friends" />
+
     <item
         android:id="@+id/logout"
         android:icon="@drawable/ic_baseline_exit_to_app_24"
         android:title="Logout" />
+
+
 </menu>
 
 
