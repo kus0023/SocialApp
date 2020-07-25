@@ -38,8 +38,8 @@ public class AddNewActivity extends AppCompatActivity {
 
             ImageView photo=itemView.findViewById(R.id.add_iv_profile);
             TextView name=itemView.findViewById(R.id.add_tv_name);
-            Button btn_add=itemView.findViewById(R.id.add_btn_add);
-            Button btn_view=itemView.findViewById(R.id.add_btn_view);
+            Button btn_add=itemView.findViewById(R.id.confirm_btn);
+            Button btn_view=itemView.findViewById(R.id.remove_btn);
         }
     }
 

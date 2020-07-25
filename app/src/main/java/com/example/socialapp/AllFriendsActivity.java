@@ -8,6 +8,7 @@ import com.google.firebase.storage.StorageReference;
 
 public class AllFriendsActivity extends AppCompatActivity {
 
+
     private StorageReference storageReference;
 
     @Override
