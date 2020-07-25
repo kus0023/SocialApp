@@ -2,12 +2,14 @@ package com.example.socialapp;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -146,11 +148,16 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
                 Intent j=new Intent(DashboardActivity.this,UserpostActivity.class);
                 startActivity(j);
                 break;
-            case R.id.setting:
-                Toast.makeText(this, "Settings", Toast.LENGTH_SHORT).show();
-               // Intent k=new Intent(DashboardActivity.this,MyProfileActivity.class);
-               // startActivity(k);
+
+            case R.id.all_friends:
                 break;
+
+            case R.id.friendReq:
+                break;
+
+            case R.id.addFriend:
+                break;
+
             case R.id.logout:
                 Toast.makeText(this, "logout", Toast.LENGTH_SHORT).show();
                 signOut();
@@ -215,5 +222,22 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
     }
 
 
-
+    @Override
+    public void onBackPressed() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Exit").setMessage("Are you sure you want to Exit?")
+                .setPositiveButton("Exit", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        finish();
+                    }
+                })
+                .setNeutralButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                }).setCancelable(false);
+        builder.show();
+    }
 }

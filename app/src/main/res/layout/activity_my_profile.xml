@@ -60,6 +60,7 @@
             android:layout_marginEnd="16dp"
             android:gravity="center"
             android:orientation="horizontal"
+            android:padding="5dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tv_myprofile_name">
@@ -74,9 +75,11 @@
                 android:id="@+id/tv_myprofile_email"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="5dp"
+                android:paddingLeft="10dp"
                 android:text="Email"
-                android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+                android:textAlignment="textStart"
+                android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                android:textColor="#0B0B0B" />
         </LinearLayout>
 
         <LinearLayout
@@ -103,8 +106,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:padding="5dp"
+                android:paddingLeft="10dp"
                 android:text="Mobile"
+                android:textAlignment="textStart"
                 android:textAppearance="@style/TextAppearance.AppCompat.Large" />
 
         </LinearLayout>
@@ -133,8 +137,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:padding="5dp"
+                android:paddingLeft="10dp"
                 android:text="DOB"
+                android:textAlignment="textStart"
                 android:textAppearance="@style/TextAppearance.AppCompat.Large" />
         </LinearLayout>
 
@@ -143,7 +148,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="32dp"
-            android:layout_marginTop="100dp"
+            android:layout_marginTop="32dp"
             android:layout_marginEnd="32dp"
             android:text="Edit Profile"
             app:layout_constraintEnd_toEndOf="parent"
@@ -155,7 +160,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="32dp"
-            android:layout_marginTop="50dp"
+            android:layout_marginTop="32dp"
             android:layout_marginEnd="32dp"
             android:text="View Your Post"
             app:layout_constraintEnd_toEndOf="parent"
