@@ -15,6 +15,7 @@
         <activity android:name=".DashboardActivity" android:theme="@style/Theme.AppCompat.Light.NoActionBar">
 
         </activity>
+        <activity android:name=".AllFriendsActivity"/>
         <activity android:name=".UserProfilePageAcitvity"/>
         <activity android:name=".AddNewActivity"/>
         <activity android:name=".EditUserInfoActivity"/>

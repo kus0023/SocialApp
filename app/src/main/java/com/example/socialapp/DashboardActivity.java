@@ -150,6 +150,8 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
                 break;
 
             case R.id.all_friends:
+                Intent allFreind=new Intent(DashboardActivity.this,AllFriendsActivity.class);
+                startActivity(allFreind);
                 break;
 
             case R.id.friendReq:
