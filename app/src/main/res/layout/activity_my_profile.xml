@@ -12,10 +12,11 @@
 
         <ImageView
             android:id="@+id/img_myprofile_back"
-            android:layout_width="0dp"
-            android:layout_height="181dp"
+            android:layout_width="405dp"
+            android:layout_height="185dp"
             android:layout_marginStart="8dp"
             android:layout_marginEnd="8dp"
+            android:background="@drawable/rounded_buttons"
             android:padding="10dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -29,18 +30,19 @@
             android:layout_marginStart="32dp"
             android:layout_marginTop="128dp"
             android:layout_marginEnd="16dp"
+            android:background="@drawable/rounded_buttons"
+            android:src="@drawable/image_style"
             app:layout_constraintEnd_toStartOf="@+id/tv_myprofile_name"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:srcCompat="@tools:sample/avatars"
-            android:src="@drawable/image_style"/>
+            tools:srcCompat="@tools:sample/avatars" />
 
         <TextView
             android:id="@+id/tv_myprofile_name"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:layout_marginEnd="16dp"
+            android:layout_marginEnd="8dp"
             android:fontFamily="sans-serif"
             android:padding="10dp"
             android:text="Name"
