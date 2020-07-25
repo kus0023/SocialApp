@@ -156,6 +156,8 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
                 break;
 
             case R.id.addFriend:
+                Intent k=new Intent(DashboardActivity.this,AddNewActivity.class);
+                startActivity(k);
                 break;
 
             case R.id.logout:
