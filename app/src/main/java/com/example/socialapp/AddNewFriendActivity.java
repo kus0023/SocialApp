@@ -7,7 +7,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -26,7 +25,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AddNewActivity extends AppCompatActivity {
+public class AddNewFriendActivity extends AppCompatActivity {
 
     private RecyclerView rv;
     private DatabaseReference reference;
@@ -98,7 +97,7 @@ public class AddNewActivity extends AppCompatActivity {
             holder.photo.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Intent intent=new Intent(AddNewActivity.this,UserProfilePageAcitvity.class);
+                    Intent intent=new Intent(AddNewFriendActivity.this,UserProfilePageAcitvity.class);
                     intent.putExtra("Email",userModel.getEmail());
                     startActivity(intent);
 
@@ -113,7 +112,7 @@ public class AddNewActivity extends AppCompatActivity {
                     String userid=userModel.getEmail().split("@")[0];
                     DatabaseReference reference2 = FirebaseDatabase.getInstance().getReference("friend_request").child(userid);
                     reference2.child(userid_auth).setValue(auth.getCurrentUser().getEmail());
-                    Toast.makeText(AddNewActivity.this, "friend request send...", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AddNewFriendActivity.this, "friend request send...", Toast.LENGTH_SHORT).show();
                 }
             });
 

@@ -17,7 +17,6 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -158,7 +157,7 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
                 break;
 
             case R.id.addFriend:
-                Intent k=new Intent(DashboardActivity.this,AddNewActivity.class);
+                Intent k=new Intent(DashboardActivity.this, AddNewFriendActivity.class);
                 startActivity(k);
                 break;
 

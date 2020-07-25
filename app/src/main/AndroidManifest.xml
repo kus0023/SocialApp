@@ -17,7 +17,7 @@
         </activity>
         <activity android:name=".AllFriendsActivity"/>
         <activity android:name=".UserProfilePageAcitvity"/>
-        <activity android:name=".AddNewActivity"/>
+        <activity android:name=".AddNewFriendActivity"/>
         <activity android:name=".EditUserInfoActivity"/>
         <activity android:name=".AddUserPostActivity" />
         <activity android:name=".UserpostActivity" />
