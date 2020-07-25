@@ -5,11 +5,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -17,11 +19,15 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -34,6 +40,7 @@ public class UserpostActivity extends AppCompatActivity {
     private RecyclerView rv;
     private DatabaseReference dref;
     private List<Post_model> list;
+    ProgressDialog pd;
 
 
     @Override
@@ -45,6 +52,7 @@ public class UserpostActivity extends AppCompatActivity {
 
         rv.setLayoutManager(new LinearLayoutManager(this));
         Log.d("test-list-come", "activity started");
+        pd = new ProgressDialog(this);
 
         FirebaseAuth auth = FirebaseAuth.getInstance();
         String userid = auth.getCurrentUser().getEmail().split("@")[0];
@@ -76,6 +84,7 @@ public class UserpostActivity extends AppCompatActivity {
         ImageView photo;
         TextView caption;
         TextView like;
+        Button delete;
 
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -85,6 +94,7 @@ public class UserpostActivity extends AppCompatActivity {
              photo=itemView.findViewById(R.id.postimage);
              caption=itemView.findViewById(R.id.postcaption);
              like=itemView.findViewById(R.id.like_tv);
+             delete = itemView.findViewById(R.id.btn_delete);
         }
     }
     class MyAdapter extends RecyclerView.Adapter<MyViewHolder>{
@@ -97,13 +107,13 @@ public class UserpostActivity extends AppCompatActivity {
         @NonNull
         @Override
         public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            View v=getLayoutInflater().inflate(R.layout.post_item,parent,false);
+            View v=getLayoutInflater().inflate(R.layout.personal_post_item,parent,false);
             return new MyViewHolder(v);
         }
 
         @Override
         public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-            Post_model post_model=list.get(position);
+            final Post_model post_model=list.get(position);
             holder.date.setText(post_model.getDate());
             holder.time.setText(post_model.getTime());
             holder.caption.setText(post_model.getCaption());
@@ -112,6 +122,12 @@ public class UserpostActivity extends AppCompatActivity {
             Glide.with(getApplicationContext())
                     .load(post_model.getImage())
                     .into(holder.photo);
+            holder.delete.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    deletePost(post_model);
+                }
+            });
         }
 
         @Override
@@ -146,5 +162,37 @@ public class UserpostActivity extends AppCompatActivity {
         });
 
         return list;
+    }
+
+    private  void deletePost(Post_model data){
+
+        pd.setTitle("Deleting your Post");
+        pd.show();
+        final DatabaseReference database = FirebaseDatabase.getInstance().getReference("user_post").child(data.getUserid());
+        final Query query = database.orderByChild("image").equalTo(data.getImage());
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for(DataSnapshot s: snapshot.getChildren()){
+                    Log.d("delete_post", ""+s.getValue());
+                    s.getRef().removeValue();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+                Toast.makeText(UserpostActivity.this, "Something is wrong", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        StorageReference storage = FirebaseStorage.getInstance().getReferenceFromUrl(data.getImage());
+        storage.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                pd.dismiss();
+            }
+        });
+
     }
 }

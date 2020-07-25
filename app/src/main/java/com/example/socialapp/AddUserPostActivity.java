@@ -70,65 +70,56 @@ public class AddUserPostActivity extends AppCompatActivity {
         post.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                pd.show();
 
-                final String userid = auth.getCurrentUser().getEmail().split("@")[0];
                 String caption = tv.getText().toString();
-                int like =0;
-                String date = new SimpleDateFormat("dd/mm/yyyy").format(new Date());
-                String time = new SimpleDateFormat(("hh:mm")).format(new Date());
 
-                final String generatedName = new SimpleDateFormat("ddmmyyyyHHmmss").format(new Date());
+                if(!caption.equals("") && uri != null) {
+                    pd.show();
+                    pd.setCancelable(false);
 
-                if(uri!=null) {
-                    final StorageReference storageReference = FirebaseStorage.getInstance().getReference("post/"+userid+"/"+generatedName+".jpg");
-                    storageReference.putFile(uri).continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
-                        @Override
-                        public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
-                            if (task.isSuccessful()) {
-                                return storageReference.getDownloadUrl();
-                            } else {
-                                throw task.getException();
+                    final String userid = auth.getCurrentUser().getEmail().split("@")[0];
+
+                    int like = 0;
+                    String date = new SimpleDateFormat("dd/mm/yyyy").format(new Date());
+                    String time = new SimpleDateFormat(("hh:mm")).format(new Date());
+
+                    final String generatedName = new SimpleDateFormat("ddmmyyyyHHmmss").format(new Date());
+
+                    if (uri != null) {
+                        final StorageReference storageReference = FirebaseStorage.getInstance().getReference("post/" + userid + "/" + generatedName + ".jpg");
+                        storageReference.putFile(uri).continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
+                            @Override
+                            public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+                                if (task.isSuccessful()) {
+                                    return storageReference.getDownloadUrl();
+                                } else {
+                                    throw task.getException();
+                                }
                             }
-                        }
-                    }).addOnCompleteListener(new OnCompleteListener<Uri>() {
-                        @Override
-                        public void onComplete(@NonNull final Task<Uri> task) {
+                        }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+                            @Override
+                            public void onComplete(@NonNull final Task<Uri> task) {
 
-                            image = task.getResult().toString();
+                                image = task.getResult().toString();
 
-                            final DatabaseReference reference = FirebaseDatabase.getInstance().getReference("user_post").child(userid).child(generatedName);
-                            reference.addListenerForSingleValueEvent(new ValueEventListener() {
-                                @Override
-                                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                    Map<String, Object> updated = new HashMap<>();
-                                    for(DataSnapshot s : snapshot.getChildren()){
-                                        updated.put(s.getKey(), s.getValue());
-                                    }
-                                    updated.put("image", ""+task.getResult().toString());
-                                    reference.updateChildren(updated);
-                                    pd.dismiss();
-                                    Toast.makeText(AddUserPostActivity.this, "Posted...", Toast.LENGTH_SHORT).show();
-                                    finish();
-                                }
+                                final DatabaseReference reference = FirebaseDatabase.getInstance().getReference("user_post").child(userid).child(generatedName);
+                                reference.child("image").setValue(image);
+                                pd.dismiss();
+                                finish();
+                            }
+                        });
+                    } else {
+                        image = "";
+                        pd.dismiss();
+                    }
 
-                                @Override
-                                public void onCancelled(@NonNull DatabaseError error) {
-
-                                    Toast.makeText(AddUserPostActivity.this, "Error in uploading: "+ error.getMessage(), Toast.LENGTH_SHORT).show();
-                                    pd.dismiss();
-                                }
-                            });
-                        }
-                    });
+                    DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("user_post").child(userid).child(generatedName);
+                    Post_model model = new Post_model(userid, image, like, caption, date, time);
+                    databaseReference.setValue(model);
                 }
                 else{
-                    image="";
+                    Toast.makeText(AddUserPostActivity.this, "No Caption or Image selected", Toast.LENGTH_SHORT).show();
                 }
-
-                DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("user_post").child(userid).child(generatedName);
-                Post_model model = new Post_model(userid, image, like,caption, date, time);
-                databaseReference.setValue(model);
             }
         });
 

@@ -1,6 +1,7 @@
 package com.example.socialapp;
 
 import android.app.DatePickerDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -9,6 +10,8 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.provider.MediaStore;
 import android.view.LayoutInflater;
@@ -69,6 +72,7 @@ public class RegisterFragment extends Fragment {
     private final int PROFILE_PICK_CODE =100;
     private final int BACKGROUND_PICK_CODE =200;
     private List<String> list;
+    private ProgressDialog progressDialog;
 
 
 
@@ -163,6 +167,11 @@ public class RegisterFragment extends Fragment {
 
                         if(pass1.equals(pass2) && pass1.length() >=6){
 
+                            progressDialog = new ProgressDialog(getContext());
+                            progressDialog.setTitle("Registering You...");
+                            progressDialog.setCancelable(false);
+                            progressDialog.show();
+
                             String[] temp = emailid.split("@");
                             FirebaseAuth auth = FirebaseAuth.getInstance();
                             DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("user_info").child(temp[0]);
@@ -176,7 +185,7 @@ public class RegisterFragment extends Fragment {
                             .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                                 @Override
                                 public void onComplete(@NonNull Task<AuthResult> task) {
-                                    Toast.makeText(context, "You are registered successfully", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(context, "Uploading Your Files", Toast.LENGTH_SHORT).show();
                                 }
                             })
                             .addOnFailureListener(new OnFailureListener() {
@@ -225,6 +234,8 @@ public class RegisterFragment extends Fragment {
         final String[] temp = et_username.getText().toString().split("@");
 
         final String name = new SimpleDateFormat("ddmmyyyyHHmmss").format(new Date()).concat("_"+lastname+".jpg");
+
+
         final StorageReference reference = FirebaseStorage.getInstance().getReference("profilePhoto/"+temp[0]+"/"+name);
         reference.putFile(uri).continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
             @Override
@@ -242,26 +253,38 @@ public class RegisterFragment extends Fragment {
             public void onComplete(final @NonNull Task<Uri> task) {
 
                 if(task.getResult()!=null) {
-                    final DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("user_info").child(temp[0]);
-                    databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot snapshot) {
-                            Map<String, Object> update = new HashMap<>();
-                            for(DataSnapshot s : snapshot.getChildren()){
-                                update.put(s.getKey(), s.getValue());
-                            }
-                            update.put(lastname, task.getResult().toString());
-                            databaseReference.updateChildren(update);
-                        }
+                    final DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("user_info").child(temp[0]);//user_info
+                    databaseReference.child(lastname).setValue(task.getResult().toString());
+                    progressDialog.dismiss();
+//                    databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+//                        @Override
+//                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                            Map<String, Object> update = new HashMap<>();
+//                            for(DataSnapshot s : snapshot.getChildren()){
+//                                update.put(s.getKey(), s.getValue());
+//                            }
+//                            update.put(lastname, task.getResult().toString());
+//                            databaseReference.updateChildren(update);
+//
+//
+//                            progressDialog.dismiss();
+//                        }
+//
+//                        @Override
+//                        public void onCancelled(@NonNull DatabaseError error) {
+//
+//                            progressDialog.dismiss();
+//                        }
+//                    });
 
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError error) {
 
-                        }
-                    });
-
-
-                    Toast.makeText(getContext(), "File uploaded", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "Congratulation! You can login Now", Toast.LENGTH_LONG).show();
+                    //back to login
+                    FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                    fragmentTransaction.replace(R.id.fragment, new LoginFragment());
+                    fragmentTransaction.addToBackStack(null);
+                    fragmentTransaction.commit();
                 }
                 else {
                     Toast.makeText(getContext(), "File Not Uploaded", Toast.LENGTH_SHORT).show();

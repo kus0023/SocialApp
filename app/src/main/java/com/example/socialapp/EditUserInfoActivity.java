@@ -88,23 +88,23 @@ public class EditUserInfoActivity extends AppCompatActivity {
             }
         });
 
-        iv_profile.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(Intent.ACTION_PICK);
-                intent.setData(MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                startActivityForResult(intent, BACKGROUND_PICK_CODE);
-            }
-        });
-
-        iv_back.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(Intent.ACTION_PICK);
-                intent.setData(MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                startActivityForResult(intent, BACKGROUND_PICK_CODE);
-            }
-        });
+//        iv_profile.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Intent intent = new Intent(Intent.ACTION_PICK);
+//                intent.setData(MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+//                startActivityForResult(intent, BACKGROUND_PICK_CODE);
+//            }
+//        });
+//
+//        iv_back.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Intent intent = new Intent(Intent.ACTION_PICK);
+//                intent.setData(MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+//                startActivityForResult(intent, BACKGROUND_PICK_CODE);
+//            }
+//        });
 
         edit_details.setOnClickListener(new View.OnClickListener() {
             @Override

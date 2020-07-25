@@ -51,6 +51,7 @@ public class LoginFragment extends Fragment {
         pd = new ProgressDialog(getContext());
 
         pd.setTitle("Loading");
+        pd.setCancelable(false);
 
         sharedPreferences = getActivity().getSharedPreferences("UserInformation", Context.MODE_PRIVATE);
 

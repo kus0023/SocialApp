@@ -15,6 +15,7 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -41,9 +42,6 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
     private RecyclerView rv;
     private FloatingActionButton addPost;
 
-
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,6 +57,9 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
         drawerToggle.syncState();
         nav_view.setNavigationItemSelectedListener(this);
 
+        View headerView = nav_view.getHeaderView(0);
+        final TextView headerusername =  headerView.findViewById(R.id.username);
+        final ImageView headerImgae = headerView.findViewById(R.id.userpic);
 
         rv.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
 
@@ -73,13 +74,37 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
 
         FirebaseAuth auth = FirebaseAuth.getInstance();
         String userid = auth.getCurrentUser().getEmail().split("@")[0];
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("user_post").child(userid);
-        reference.addValueEventListener(new ValueEventListener() {
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("user_info").child(userid);
+        DatabaseReference postDBReference = FirebaseDatabase.getInstance().getReference("user_post").child(userid);
+
+        reference.addListenerForSingleValueEvent(new ValueEventListener() {
+
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                Log.d("list-info", "onDataChange: list is empty?: "+getList().isEmpty());
 
-                rv.setAdapter(new MyAdapter(getList()));
+                UserModel p = snapshot.getValue(UserModel.class);
+                Log.d("valueHeader", "name = "+p.getFname()+" "+p.getLname());
+                Log.d("valueHeader", "profile = "+p.getProfile());
+                headerusername.setText(p.getFname()+" "+p.getLname());
+                Glide.with(DashboardActivity.this).load(p.getProfile()).into(headerImgae);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+        postDBReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                List<Post_model> posts = new ArrayList<>();
+                for(DataSnapshot s : snapshot.getChildren()){
+                    Post_model p = s.getValue(Post_model.class);
+                    posts.add(p);
+                }
+
+                rv.setAdapter(new MyAdapter(posts));
             }
 
             @Override
@@ -190,33 +215,5 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
     }
 
 
-    private  List<Post_model> getList(){
-        Log.d("list-info", "Into list function");
-        final List<Post_model> list=new ArrayList<>();
-        FirebaseAuth auth = FirebaseAuth.getInstance();
-        String userid = auth.getCurrentUser().getEmail().split("@")[0];
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("user_post").child(userid);
-        reference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
 
-                for(DataSnapshot s: snapshot.getChildren()){
-                    Post_model p =  s.getValue(Post_model.class);
-                    list.add(p);
-                    Log.d("list-info", s.getKey());
-                }
-
-                rv.setAdapter(new MyAdapter(list));
-                Log.d("list-info", "list is Empty? --> final-->"+ list.isEmpty());
-                Log.d("list-info", "adapter is set");
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                Toast.makeText(getApplicationContext(), "List is not updated due to: "+ error.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        return list;
-    }
 }
