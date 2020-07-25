@@ -37,8 +37,8 @@ public class FriendRequestActivity extends AppCompatActivity {
             super(itemView);
             fname=itemView.findViewById(R.id.add_tv_name);
             fimage=itemView.findViewById(R.id.add_iv_profile);
-            confirm_btn=itemView.findViewById(R.id.confirm_btn);
-            remove_btn=itemView.findViewById(R.id.remove_btn);
+            confirm_btn=itemView.findViewById(R.id.add_btn_add);
+            remove_btn=itemView.findViewById(R.id.add_btn_view);
 
         }
     }

@@ -40,29 +40,17 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <Button
-            android:id="@+id/confirm_btn"
+            android:id="@+id/add_btn_add"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
-            android:layout_marginEnd="4dp"
-            android:text="Add"
+            android:layout_marginEnd="8dp"
+            android:text="send request"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/remove_btn"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/add_iv_profile"
             app:layout_constraintTop_toBottomOf="@+id/add_tv_name" />
 
-        <Button
-            android:id="@+id/remove_btn"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="4dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:text="view"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/confirm_btn"
-            app:layout_constraintTop_toBottomOf="@+id/add_tv_name" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.cardview.widget.CardView>
