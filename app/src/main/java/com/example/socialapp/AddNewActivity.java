@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
@@ -28,20 +29,19 @@ import java.util.List;
 public class AddNewActivity extends AppCompatActivity {
 
     private RecyclerView rv;
-    private DatabaseReference dref;
+    private DatabaseReference reference;
     private List<UserModel> list;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_new);
-
         rv=findViewById(R.id.add_rv);
         rv.setLayoutManager(new LinearLayoutManager(this));
 
         FirebaseAuth auth = FirebaseAuth.getInstance();
         String userid = auth.getCurrentUser().getEmail().split("@")[0];
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("user_info").child(userid);
+         reference = FirebaseDatabase.getInstance().getReference("user_info").child(userid);
 
         reference.addValueEventListener(new ValueEventListener() {
             @Override
@@ -49,7 +49,6 @@ public class AddNewActivity extends AppCompatActivity {
                 list=getlist();
                 MyAdapter adp=new MyAdapter(list);
                 rv.setAdapter(adp);
-
             }
 
             @Override
@@ -58,24 +57,19 @@ public class AddNewActivity extends AppCompatActivity {
             }
         });
 
-
     }
 
     static class MyviewHolder extends RecyclerView.ViewHolder{
+
         ImageView photo;
         TextView name;
         Button btn_add;
-        Button btn_view;
 
         public MyviewHolder(@NonNull View itemView) {
             super(itemView);
-
-
              photo=itemView.findViewById(R.id.add_iv_profile);
              name=itemView.findViewById(R.id.add_tv_name);
              btn_add=itemView.findViewById(R.id.add_btn_add);
-             btn_view=itemView.findViewById(R.id.add_btn_view);
-
         }
 
     }
@@ -110,6 +104,19 @@ public class AddNewActivity extends AppCompatActivity {
 
                 }
             });
+
+            holder.btn_add.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    FirebaseAuth auth = FirebaseAuth.getInstance();
+                    String userid_auth = auth.getCurrentUser().getEmail().split("@")[0];
+                    String userid=userModel.getEmail().split("@")[0];
+                    DatabaseReference reference2 = FirebaseDatabase.getInstance().getReference("friend_request").child(userid);
+                    reference2.child(userid_auth).setValue(auth.getCurrentUser().getEmail());
+                    Toast.makeText(AddNewActivity.this, "friend request send...", Toast.LENGTH_SHORT).show();
+                }
+            });
+
         }
 
         @Override
@@ -122,8 +129,8 @@ public class AddNewActivity extends AppCompatActivity {
         final List<UserModel> list=new ArrayList<>();
        final FirebaseAuth auth = FirebaseAuth.getInstance();
        final String userid = auth.getCurrentUser().getEmail().split("@")[0];
-       DatabaseReference reference = FirebaseDatabase.getInstance().getReference("user_info");
-       reference.addValueEventListener(new ValueEventListener() {
+       DatabaseReference reference1 = FirebaseDatabase.getInstance().getReference("user_info");
+       reference1.addValueEventListener(new ValueEventListener() {
            @Override
            public void onDataChange(@NonNull DataSnapshot snapshot) {
                for (DataSnapshot s : snapshot.getChildren()) {
@@ -135,15 +142,10 @@ public class AddNewActivity extends AppCompatActivity {
                MyAdapter myAdapter=new MyAdapter(list);
                rv.setAdapter(myAdapter);
            }
-
-
-
            @Override
            public void onCancelled(@NonNull DatabaseError error) {
-
            }
        });
-
          return list;
     }
 }
