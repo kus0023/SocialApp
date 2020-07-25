@@ -12,17 +12,22 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".DashboardActivity" android:theme="@style/Theme.AppCompat.Light.NoActionBar">
-
-        </activity>
-        <activity android:name=".EditUserInfoActivity"/>
+        <activity android:name=".AddNewActivity"></activity>
+        <activity android:name=".FriendRequestActivity" />
+        <activity android:name=".AllFriendsActivity" />
+        <activity
+            android:name=".DashboardActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <activity android:name=".EditUserInfoActivity" />
         <activity android:name=".AddUserPostActivity" />
         <activity android:name=".UserpostActivity" />
-        <activity android:name=".MyProfileActivity"></activity>
-        <activity android:name=".LoginRegisterActivity" android:theme="@style/Theme.AppCompat.Light.NoActionBar">
-
-        </activity>
-        <activity android:name=".MainActivity" android:theme="@style/Theme.AppCompat.Light.NoActionBar">
+        <activity android:name=".MyProfileActivity" />
+        <activity
+            android:name=".LoginRegisterActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <activity
+            android:name=".MainActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
