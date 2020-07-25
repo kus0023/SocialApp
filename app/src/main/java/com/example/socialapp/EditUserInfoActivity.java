@@ -147,7 +147,7 @@ public class EditUserInfoActivity extends AppCompatActivity {
 
     private boolean ismobchange() {
         if(!(phone_no.equals(et_mob.getText().toString() ))){
-            dref.child("phone").setValue(et_fname.getText().toString());
+            dref.child("phone").setValue(et_mob.getText().toString());
             return true;
         }
         else{
@@ -156,7 +156,7 @@ public class EditUserInfoActivity extends AppCompatActivity {
     }
 
     private boolean isdatechange() {
-        if(!date.equals(et_fname.getText().toString())){
+        if(!date.equals(et_date.getText().toString())){
             dref.child("dob").setValue(et_date.getText().toString());
             return true;
         }
