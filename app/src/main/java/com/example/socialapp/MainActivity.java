@@ -3,7 +3,6 @@ package com.example.socialapp;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
-import android.net.IpSecManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.WindowManager;
@@ -32,9 +31,9 @@ public class MainActivity extends AppCompatActivity {
         topAnim= AnimationUtils.loadAnimation(this,R.anim.top_animation);
         bottomAnim= AnimationUtils.loadAnimation(this,R.anim.bottom_animation);
 
-        logo1=findViewById(R.id.imageView7);
-        logo2=findViewById(R.id.imageView8);
-        logoname=findViewById(R.id.imageView9);
+        logo1=findViewById(R.id.logo1);
+        logo2=findViewById(R.id.logo2);
+        logoname=findViewById(R.id.name);
 
         //set animation
         logo1.setAnimation(topAnim);
