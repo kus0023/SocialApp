@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -41,6 +42,23 @@ public class AddNewFriendActivity extends AppCompatActivity {
         FirebaseAuth auth = FirebaseAuth.getInstance();
         String userid = auth.getCurrentUser().getEmail().split("@")[0];
          reference = FirebaseDatabase.getInstance().getReference("user_info").child(userid);
+         DatabaseReference r1=FirebaseDatabase.getInstance().getReference();
+
+         r1.addValueEventListener(new ValueEventListener() {
+             @Override
+             public void onDataChange(@NonNull DataSnapshot snapshot) {
+                 list=getlist();
+                 MyAdapter adp=new MyAdapter(list);
+                 rv.setAdapter(adp);
+             }
+
+             @Override
+             public void onCancelled(@NonNull DatabaseError error) {
+
+             }
+         });
+
+
 
         reference.addValueEventListener(new ValueEventListener() {
             @Override
@@ -111,7 +129,7 @@ public class AddNewFriendActivity extends AppCompatActivity {
                     String userid_auth = auth.getCurrentUser().getEmail().split("@")[0];
                     String userid=userModel.getEmail().split("@")[0];
                     DatabaseReference reference2 = FirebaseDatabase.getInstance().getReference("friend_request").child(userid);
-                    reference2.child(userid_auth).setValue(auth.getCurrentUser().getEmail());
+                    reference2.child(userid_auth).setValue(userid_auth);
                     Toast.makeText(AddNewFriendActivity.this, "friend request send...", Toast.LENGTH_SHORT).show();
                     holder.btn_add.setText("Request send");
                 }
@@ -126,26 +144,46 @@ public class AddNewFriendActivity extends AppCompatActivity {
     }
 
    private List<UserModel> getlist(){
-        final List<UserModel> list=new ArrayList<>();
+        final List<UserModel> list1=new ArrayList<>();
        final FirebaseAuth auth = FirebaseAuth.getInstance();
        final String userid = auth.getCurrentUser().getEmail().split("@")[0];
-       DatabaseReference reference1 = FirebaseDatabase.getInstance().getReference("user_info");
+       final DatabaseReference reference1 = FirebaseDatabase.getInstance().getReference("user_info");
+       final DatabaseReference reference2=FirebaseDatabase.getInstance().getReference("friend_request");
        reference1.addValueEventListener(new ValueEventListener() {
            @Override
            public void onDataChange(@NonNull DataSnapshot snapshot) {
                for (DataSnapshot s : snapshot.getChildren()) {
-                   UserModel userModel = s.getValue(UserModel.class);
+                   final UserModel userModel = s.getValue(UserModel.class);
                    if(!userModel.getEmail().equals(auth.getCurrentUser().getEmail())) {
-                       list.add(userModel);
+                       list1.add(userModel);
+                       reference2.child(userid).addValueEventListener(new ValueEventListener() {
+                           @Override
+                           public void onDataChange(@NonNull DataSnapshot snapshot) {
+                               for (DataSnapshot s1 : snapshot.getChildren()){
+                                   Log.d("shweta", "equels: "+s1.getValue().toString().equals(userModel.getEmail().split("@")[0]));
+                                   if(s1.getValue().toString().equals(userModel.getEmail().split("@")[0]))
+                                   {
+                                       Log.d("shweta", "onDataChange: " + s1.getValue());
+                                       list1.remove(userModel);
+                                       rv.setAdapter(new MyAdapter(list1));
+                                   }
+                               }
+                           }
+                           @Override
+                           public void onCancelled(@NonNull DatabaseError error) {
+                           }
+                       });
+
+
                    }
                }
-               MyAdapter myAdapter=new MyAdapter(list);
-               rv.setAdapter(myAdapter);
+//               MyAdapter myAdapter=new MyAdapter(list1);
+//               rv.setAdapter(myAdapter);
            }
            @Override
            public void onCancelled(@NonNull DatabaseError error) {
            }
        });
-         return list;
+         return list1;
     }
 }
