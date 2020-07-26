@@ -1,12 +1,16 @@
 package com.example.socialapp;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
@@ -16,12 +20,19 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,6 +52,10 @@ public class EditUserInfoActivity extends AppCompatActivity {
     private DatabaseReference dref;
     String fname, lname, date, phone_no;
 
+    private String currentUser;
+
+    private FirebaseAuth auth;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,7 +72,8 @@ public class EditUserInfoActivity extends AppCompatActivity {
         iv_back = findViewById(R.id.img_info_back);
         list = new ArrayList<>();
 
-        FirebaseAuth auth = FirebaseAuth.getInstance();
+        auth = FirebaseAuth.getInstance();
+        currentUser = auth.getCurrentUser().getEmail();
         String uid = auth.getCurrentUser().getEmail().split("@")[0];
 
         dref = FirebaseDatabase.getInstance().getReference("user_info").child(uid);
@@ -121,9 +137,104 @@ public class EditUserInfoActivity extends AppCompatActivity {
             }
         });
 
+        del_acc.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(final View v) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(EditUserInfoActivity.this);
+                builder.setTitle("Delete Account").setMessage("Are You sure you want to delete?")
+                        .setCancelable(false)
+                        .setNeutralButton("no", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        })
+                        .setPositiveButton("yes! delete", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+
+                                auth.getCurrentUser().delete().addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
+                                        if(task.isSuccessful()) {
+                                            deleteUser();
+                                            SharedPreferences sp = getSharedPreferences("UserInformation", MODE_PRIVATE);
+                                            SharedPreferences.Editor editor = sp.edit();
+                                            editor.putString("userId", "Guest");
+                                            editor.putString("password", "Guest");
+                                            editor.apply();
+                                            Intent i = new Intent(EditUserInfoActivity.this, MainActivity.class);
+                                            startActivity(i);
+                                            finish();
+                                        }
+                                    }
+                                })
+                                .addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        Toast.makeText(EditUserInfoActivity.this, "failed : "+e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+                                    }
+                                });
+
+                            }
+                        }).show();
+            }
+        });
+
         
 
     }
+    @Override
+    public void onBackPressed() {
+        Intent i = new Intent(this, MainActivity.class);
+        startActivity(i);
+        finish();
+    }
+
+    private void deleteUser(){
+        String id = currentUser.split("@")[0];
+        FirebaseDatabase.getInstance().getReference("user_info").child(id).removeValue();
+        FirebaseDatabase.getInstance().getReference("user_post").child(id).removeValue();
+
+        FirebaseStorage.getInstance().getReference("post/"+id).delete();
+        FirebaseStorage.getInstance().getReference("profilePhoto/"+id).delete()
+        .addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if(task.isSuccessful())
+                    deleteFriends();
+
+            }
+        });
+
+
+    }
+
+    private void deleteFriends(){
+        final String id = currentUser.split("@")[0];
+        final DatabaseReference friendReference = FirebaseDatabase.getInstance().getReference("friends");
+        friendReference.child(id).removeValue();
+        friendReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for(DataSnapshot s : snapshot.getChildren()){
+                    for(DataSnapshot s1: s.getChildren()){
+                        if(s1.getValue().toString().equals(id)){
+                            s1.getRef().removeValue();
+//                            Log.d("values", "onDataChange: "+s1.getRef());
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
+
 
     private boolean islnamechange() {
         if(!(lname.equals(et_lname.getText().toString()))){

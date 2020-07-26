@@ -49,6 +49,7 @@ public class MyProfileActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent i=new Intent(MyProfileActivity.this,EditUserInfoActivity.class);
                 startActivity(i);
+                finish();
             }
         });
 

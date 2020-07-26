@@ -237,8 +237,6 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
             time=itemView.findViewById(R.id.textView8);
             photo=itemView.findViewById(R.id.postimage);
             caption=itemView.findViewById(R.id.postcaption);
-            like=itemView.findViewById(R.id.like_tv);
-            likeButton = itemView.findViewById(R.id.likeib);
         }
     }
     class MyAdapter extends RecyclerView.Adapter<MyViewHolder>{
