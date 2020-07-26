@@ -75,42 +75,15 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
             android:ellipsize="end"
             android:maxLines="1"
             android:padding="4dp"
             android:text="caption"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/postimage" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/postcaption">
-
-            <ImageButton
-                android:id="@+id/likeib"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:background="@drawable/ic_baseline_thumb_up_24"
-                android:backgroundTint="#A3A3A3" />
-
-            <TextView
-                android:id="@+id/like_tv"
-                style="@style/Theme.AppCompat.DayNight.NoActionBar"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_marginLeft="5dp"
-                android:textAppearance="@style/TextAppearance.AppCompat.Small" />
-
-        </LinearLayout>
+            app:layout_constraintTop_toBottomOf="@+id/postimage" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
