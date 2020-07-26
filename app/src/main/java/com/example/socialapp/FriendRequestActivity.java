@@ -12,11 +12,21 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
 import java.util.List;
 
 public class FriendRequestActivity extends AppCompatActivity {
 
     private RecyclerView rv;
+    private DatabaseReference dbrf;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -24,9 +34,33 @@ public class FriendRequestActivity extends AppCompatActivity {
 
         rv=findViewById(R.id.recyclerView3);
         rv.setLayoutManager(new LinearLayoutManager(this));
+        FirebaseAuth auth=FirebaseAuth.getInstance();
+        String userid=auth.getCurrentUser().getEmail().split("@")[0];
+
+        final DatabaseReference reference= FirebaseDatabase.getInstance().getReference("friend_requests");
+        final DatabaseReference reference1=FirebaseDatabase.getInstance().getReference("user_info").child(userid);
+
+        reference1.addValueEventListener(new ValueEventListener() {
+            @Override
+
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                final List<UserModel> list=new ArrayList<>();
+                for(DataSnapshot s:snapshot.getChildren()){
+                    //reference.child(s)
+
+               }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
 
 
     }
+
+
 
     static class MyViewHolder extends RecyclerView.ViewHolder{
         TextView fname;
@@ -44,9 +78,9 @@ public class FriendRequestActivity extends AppCompatActivity {
     }
 
     class Myadapter extends RecyclerView.Adapter<MyViewHolder>{
-        private List<Request_model> list;
+        private List<UserModel> list;
 
-        public Myadapter(List<Request_model> list) {
+        public Myadapter(List<UserModel> list) {
 
             this.list = list;
         }
@@ -60,6 +94,9 @@ public class FriendRequestActivity extends AppCompatActivity {
 
         @Override
         public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
+            UserModel um=list.get(position);
+            holder.fname.setText(um.getFname() + " "+ um.getLname());
+            Glide.with(getApplicationContext()).load(um.getProfile()).into(holder.fimage);
 
         }
 
@@ -69,29 +106,5 @@ public class FriendRequestActivity extends AppCompatActivity {
         }
     }
 
-    class Request_model{
-        private String f_img;
-        private String f_name;
 
-        public Request_model(String f_img, String f_name) {
-            this.f_img = f_img;
-            this.f_name = f_name;
-        }
-
-        public String getF_img() {
-            return f_img;
-        }
-
-        public void setF_img(String f_img) {
-            this.f_img = f_img;
-        }
-
-        public String getF_name() {
-            return f_name;
-        }
-
-        public void setF_name(String f_name) {
-            this.f_name = f_name;
-        }
-    }
 }
