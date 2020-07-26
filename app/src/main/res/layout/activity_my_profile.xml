@@ -145,6 +145,7 @@
 
         <Button
             android:id="@+id/btn_myprofile_edit"
+            style="@style/dark_button2"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="32dp"
@@ -157,6 +158,7 @@
 
         <Button
             android:id="@+id/btn_myprofile_viewpost"
+            style="@style/dark_button2"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="32dp"

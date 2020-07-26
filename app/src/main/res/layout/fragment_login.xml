@@ -68,7 +68,7 @@
 
             <Button
                 android:id="@+id/btn_login_frg"
-                style="@style/dark_button"
+                style="@style/dark_button2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="32dp"

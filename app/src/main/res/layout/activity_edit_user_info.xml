@@ -98,6 +98,7 @@
 
             <Button
                 android:id="@+id/btn_info_edit"
+                style="@style/dark_button2"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="50dp"
@@ -146,6 +147,7 @@
 
             <Button
                 android:id="@+id/btn_info_del"
+                style="@style/dark_button2"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="50dp"
