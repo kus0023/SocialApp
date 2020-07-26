@@ -86,7 +86,7 @@ public class AddNewFriendActivity extends AppCompatActivity {
             super(itemView);
              photo=itemView.findViewById(R.id.add_iv_profile);
              name=itemView.findViewById(R.id.add_tv_name);
-             btn_add=itemView.findViewById(R.id.add_btn_add);
+             btn_add=itemView.findViewById(R.id.add_btn_confirm);
         }
 
     }

@@ -5,7 +5,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -35,6 +34,7 @@ public class AllFriendsActivity extends AppCompatActivity {
     private String currentUserId;
 
     private RecyclerView rv;
+    private List<FriendModel> list;
 
 
     @Override
@@ -53,33 +53,38 @@ public class AllFriendsActivity extends AppCompatActivity {
 
         friendReference = FirebaseDatabase.getInstance().getReference("friends").child(path);
 
-        final List<FriendModel> list = new ArrayList<>();
-
 
 
         friendReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                list.clear();
-//                Log.d("friend", "onDataChange: "+snapshot.getValue());
+                list = new ArrayList<>();
+                Log.d("friend", "onDataChange: "+snapshot.getValue());
+                boolean dataChanged = false;
                 for(DataSnapshot snapshot1: snapshot.getChildren()){
+                    dataChanged = true;
 //                    Log.d("friend", "onDataChange: "+snapshot1.getValue());
-                    userInfoReference.child((String) snapshot1.getValue())
-                            .addListenerForSingleValueEvent(new ValueEventListener() {
-                                @Override
-                                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                    UserModel user = snapshot.getValue(UserModel.class);
-                                    String name = user.getFname()+" "+user.getLname();
-                                    list.add(new FriendModel(user.getProfile(), name,user.getEmail()));
-                                    rv.setAdapter(new MyAdapter(list));
+                        userInfoReference.child(snapshot1.getValue().toString())
+                                .addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                        UserModel user = snapshot.getValue(UserModel.class);
+                                        String name = user.getFname() + " " + user.getLname();
+                                        list.add(new FriendModel(user.getProfile(), name, user.getEmail()));
+                                        rv.setAdapter(new MyAdapter(list));
 //                                    Log.d("friends", "user info "+user.getFname());
-                                }
-                                @Override
-                                public void onCancelled(@NonNull DatabaseError error) {
-                                    Toast.makeText(AllFriendsActivity.this, "Error: "+error.getMessage(), Toast.LENGTH_LONG).show();
-                                    Log.d("friends", "onCancelled: "+error.getMessage());
-                                }
-                            });
+                                    }
+
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError error) {
+                                        Toast.makeText(AllFriendsActivity.this, "Error: " + error.getMessage(), Toast.LENGTH_LONG).show();
+                                        Log.d("friends", "onCancelled: " + error.getMessage());
+                                    }
+                                });
+                }
+                if(!dataChanged){
+                    Toast.makeText(AllFriendsActivity.this, "NO Friends to show", Toast.LENGTH_SHORT).show();
+                    finish();
                 }
             }
             @Override
@@ -93,6 +98,7 @@ public class AllFriendsActivity extends AppCompatActivity {
 
 
     }
+
 
 
     private class MyViewHolder extends RecyclerView.ViewHolder{
@@ -138,10 +144,9 @@ public class AllFriendsActivity extends AppCompatActivity {
                 public void onClick(View v) {
                     final String id = friendModel.getUserId().split("@")[0];
                     friendReference.child(id).removeValue();
+                    friendReference.getParent().child(id).child(currentUserId.split("@")[0]).removeValue();
 
-                    Log.d("friend", "key: "+friendReference.child(id).getKey()+" child"+friendReference.child(id)+" child 2: "+friendReference.child(id));
-                    Log.d("friend", "onClick: "+friendModel.getUserId()+" id: "+id);
-
+//                    Log.d("friend", "onClick: "+friendModel.getUserId()+" id: "+id);
                 }
             });
         }
@@ -186,5 +191,16 @@ public class AllFriendsActivity extends AppCompatActivity {
         public void setUserId(String userId) {
             this.userId = userId;
         }
+
+        @Override
+        public String toString() {
+            return "FriendModel{" +
+                    "profilePhoto='" + profilePhoto + '\'' +
+                    ", name='" + name + '\'' +
+                    ", userId='" + userId + '\'' +
+                    '}';
+        }
     }
+
+
 }

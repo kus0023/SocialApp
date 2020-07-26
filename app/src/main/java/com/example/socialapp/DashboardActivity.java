@@ -154,6 +154,8 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
                 break;
 
             case R.id.friendReq:
+                Intent req = new Intent(DashboardActivity.this, FriendRequestActivity.class);
+                startActivity(req);
                 break;
 
             case R.id.addFriend:
