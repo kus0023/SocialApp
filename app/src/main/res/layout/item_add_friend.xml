@@ -41,12 +41,13 @@
 
         <Button
             android:id="@+id/add_btn_confirm"
+            style="@style/dark_button2"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
-            android:text="send request"
+            android:text="add friend"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/add_iv_profile"
