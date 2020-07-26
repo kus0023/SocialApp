@@ -13,9 +13,11 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -28,6 +30,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
@@ -218,8 +221,6 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
     }
 
 
-
-
     static class MyViewHolder extends RecyclerView.ViewHolder{
         TextView fname;
         TextView date;
@@ -227,6 +228,7 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
         ImageView photo;
         TextView caption;
         TextView like;
+        ImageButton likeButton;
 
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -236,6 +238,7 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
             photo=itemView.findViewById(R.id.postimage);
             caption=itemView.findViewById(R.id.postcaption);
             like=itemView.findViewById(R.id.like_tv);
+            likeButton = itemView.findViewById(R.id.likeib);
         }
     }
     class MyAdapter extends RecyclerView.Adapter<MyViewHolder>{
@@ -254,7 +257,7 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
 
         @Override
         public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-            Post_model post_model=list.get(position);
+            final Post_model post_model=list.get(position);
             holder.date.setText(post_model.getDate());
             holder.time.setText(post_model.getTime());
             holder.caption.setText(post_model.getCaption());
