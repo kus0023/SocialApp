@@ -22,15 +22,16 @@
         <activity android:name=".EditUserInfoActivity"/>
         <activity android:name=".AddUserPostActivity" />
         <activity android:name=".UserpostActivity" />
-        <activity android:name=".MyProfileActivity"></activity>
-        <activity android:name=".LoginRegisterActivity" android:theme="@style/Theme.AppCompat.Light.NoActionBar">
+        <activity android:name=".MyProfileActivity"/>
+        <activity android:name=".LoginRegisterActivity" android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
+
+        <activity android:name=".MainActivity" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".MainActivity" />
     </application>
 
 </manifest>
