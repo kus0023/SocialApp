@@ -4,12 +4,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/splash_screen_background"
     tools:context=".AddUserPostActivity">
 
     <ScrollView
         android:id="@+id/scrollView3"
+        style="spl"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:background="@drawable/splash_screen_background"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
