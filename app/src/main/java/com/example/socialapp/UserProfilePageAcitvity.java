@@ -76,6 +76,7 @@ public class UserProfilePageAcitvity extends AppCompatActivity {
                 DatabaseReference reference1 = FirebaseDatabase.getInstance().getReference("friend_request").child(userid);
                 reference1.child(userid_auth).setValue(auth.getCurrentUser().getEmail());
                 Toast.makeText(UserProfilePageAcitvity.this, "friend Request send...", Toast.LENGTH_SHORT).show();
+                add.setText("added");
 
             }
         });

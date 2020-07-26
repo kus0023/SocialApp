@@ -88,7 +88,7 @@ public class AddNewFriendActivity extends AppCompatActivity {
         }
 
         @Override
-        public void onBindViewHolder(@NonNull MyviewHolder holder, int position) {
+        public void onBindViewHolder(@NonNull final MyviewHolder holder, int position) {
             final UserModel userModel=list.get(position);
 
             holder.name.setText(userModel.getFname()+" "+userModel.getLname());
@@ -113,6 +113,7 @@ public class AddNewFriendActivity extends AppCompatActivity {
                     DatabaseReference reference2 = FirebaseDatabase.getInstance().getReference("friend_request").child(userid);
                     reference2.child(userid_auth).setValue(auth.getCurrentUser().getEmail());
                     Toast.makeText(AddNewFriendActivity.this, "friend request send...", Toast.LENGTH_SHORT).show();
+                    holder.btn_add.setText("Request send");
                 }
             });
 
