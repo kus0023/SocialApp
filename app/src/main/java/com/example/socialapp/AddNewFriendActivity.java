@@ -149,6 +149,7 @@ public class AddNewFriendActivity extends AppCompatActivity {
        final String userid = auth.getCurrentUser().getEmail().split("@")[0];
        final DatabaseReference reference1 = FirebaseDatabase.getInstance().getReference("user_info");
        final DatabaseReference reference2=FirebaseDatabase.getInstance().getReference("friend_request");
+
        reference1.addValueEventListener(new ValueEventListener() {
            @Override
            public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -177,8 +178,8 @@ public class AddNewFriendActivity extends AppCompatActivity {
 
                    }
                }
-//               MyAdapter myAdapter=new MyAdapter(list1);
-//               rv.setAdapter(myAdapter);
+             MyAdapter myAdapter=new MyAdapter(list1);
+               rv.setAdapter(myAdapter);
            }
            @Override
            public void onCancelled(@NonNull DatabaseError error) {
