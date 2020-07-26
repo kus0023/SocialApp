@@ -10,13 +10,13 @@
     <style name="dark_button">
         <item name="android:background">@drawable/button_background_dark</item>
         <item name="android:textColor">@android:color/background_light</item>
-        <item name="android:fontFamily">@font/cairo_semibold</item>
+<!--        <item name="android:fontFamily">@font/cairo_semibold</item>-->
     </style>
 
     <style name="light_button">
         <item name="android:background">@drawable/button_background_light</item>
         <item name="android:textColor">@android:color/holo_red_light</item>
-        <item name="android:fontFamily">@font/cairo_semibold</item>
+<!--        <item name="android:fontFamily">@font/cairo_semibold</item>-->
     </style>
 
     <style name="dark_button2">

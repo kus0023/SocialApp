@@ -13,7 +13,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,6 +31,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class DashboardActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
@@ -42,6 +42,13 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
     private ActionBarDrawerToggle drawerToggle;
     private RecyclerView rv;
     private FloatingActionButton addPost;
+    private List<Post_model> postList;
+
+    private DatabaseReference reference;
+    private DatabaseReference postDBReference;
+    private DatabaseReference friendReference;
+
+    private String currentUserId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,17 +82,20 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
 
         FirebaseAuth auth = FirebaseAuth.getInstance();
         String userid = auth.getCurrentUser().getEmail().split("@")[0];
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("user_info").child(userid);
-        DatabaseReference postDBReference = FirebaseDatabase.getInstance().getReference("user_post").child(userid);
+        currentUserId = userid;
+        reference = FirebaseDatabase.getInstance().getReference("user_info").child(userid);
+        postDBReference = FirebaseDatabase.getInstance().getReference("user_post");
+        friendReference = FirebaseDatabase.getInstance().getReference("friends").child(userid);
 
+        //getting photo of header section caption
         reference.addListenerForSingleValueEvent(new ValueEventListener() {
 
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
 
                 UserModel p = snapshot.getValue(UserModel.class);
-                Log.d("valueHeader", "name = "+p.getFname()+" "+p.getLname());
-                Log.d("valueHeader", "profile = "+p.getProfile());
+//                Log.d("valueHeader", "name = "+p.getFname()+" "+p.getLname());
+//                Log.d("valueHeader", "profile = "+p.getProfile());
                 headerusername.setText(p.getFname()+" "+p.getLname());
                 Glide.with(DashboardActivity.this).load(p.getProfile()).into(headerImgae);
             }
@@ -96,24 +106,59 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
             }
         });
 
-        postDBReference.addValueEventListener(new ValueEventListener() {
+
+
+        friendReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                List<Post_model> posts = new ArrayList<>();
+                postList = new ArrayList<>();
                 for(DataSnapshot s : snapshot.getChildren()){
-                    Post_model p = s.getValue(Post_model.class);
-                    posts.add(p);
+
+                    postDBReference.child(s.getValue().toString())
+                            .addValueEventListener(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                    for(DataSnapshot s1: snapshot.getChildren()){
+                                        Post_model model = s1.getValue(Post_model.class);
+                                        postList.add(model);
+                                    }
+                                    Collections.shuffle(postList);
+                                    rv.setAdapter(new MyAdapter(postList));
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError error) {
+
+                                }
+                            });
+
                 }
 
-                rv.setAdapter(new MyAdapter(posts));
+                postDBReference.child(currentUserId).addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        for(DataSnapshot s1: snapshot.getChildren()){
+                            Post_model model = s1.getValue(Post_model.class);
+                            postList.add(model);
+
+                        }
+                        Collections.shuffle(postList);
+                        rv.setAdapter(new MyAdapter(postList));
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
 
-                Toast.makeText(DashboardActivity.this, "something wrong", Toast.LENGTH_LONG).show();
             }
         });
+
 
 
 
