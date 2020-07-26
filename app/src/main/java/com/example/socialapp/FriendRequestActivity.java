@@ -37,16 +37,31 @@ public class FriendRequestActivity extends AppCompatActivity {
         FirebaseAuth auth=FirebaseAuth.getInstance();
         String userid=auth.getCurrentUser().getEmail().split("@")[0];
 
-        final DatabaseReference reference= FirebaseDatabase.getInstance().getReference("friend_requests");
-        final DatabaseReference reference1=FirebaseDatabase.getInstance().getReference("user_info").child(userid);
+        final DatabaseReference reference= FirebaseDatabase.getInstance().getReference("friend_requests").child(userid);
+        final DatabaseReference reference1=FirebaseDatabase.getInstance().getReference("user_info");
 
-        reference1.addValueEventListener(new ValueEventListener() {
+        reference.addValueEventListener(new ValueEventListener() {
             @Override
 
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                final List<UserModel> list=new ArrayList<>();
+                final List<RequestModel> list=new ArrayList<>();
                 for(DataSnapshot s:snapshot.getChildren()){
-                    //reference.child(s)
+                    reference1.child(s.toString()).addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                           UserModel user=snapshot.getValue(UserModel.class);
+                           String name=user.getFname()+" "+user.getLname();
+                           String profile=user.getProfile();
+                          // list.add(new RequestModel());
+                          // rv.setAdapter(new Myadapter(list));
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });
+
 
                }
             }
@@ -106,5 +121,29 @@ public class FriendRequestActivity extends AppCompatActivity {
         }
     }
 
+    class RequestModel{
+        private String fname;
+        private String fimage;
 
+        public RequestModel(String fname, String fimage) {
+            this.fname = fname;
+            this.fimage = fimage;
+        }
+
+        public String getFname() {
+            return fname;
+        }
+
+        public void setFname(String fname) {
+            this.fname = fname;
+        }
+
+        public String getFimage() {
+            return fimage;
+        }
+
+        public void setFimage(String fimage) {
+            this.fimage = fimage;
+        }
+    }
 }
