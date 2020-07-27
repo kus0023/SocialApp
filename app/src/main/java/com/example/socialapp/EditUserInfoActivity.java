@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.DatePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -15,6 +16,7 @@ import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -37,7 +39,9 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 public class EditUserInfoActivity extends AppCompatActivity {
@@ -80,8 +84,34 @@ public class EditUserInfoActivity extends AppCompatActivity {
         currentUser = auth.getCurrentUser().getEmail();
         String uid = auth.getCurrentUser().getEmail().split("@")[0];
 
-        dref = FirebaseDatabase.getInstance().getReference("user_info").child(uid);
 
+
+        et_date.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final Calendar calendar = Calendar.getInstance();
+                int year = calendar.get(Calendar.YEAR);
+                int month = calendar.get(Calendar.MONTH);
+                int day = calendar.get(Calendar.DAY_OF_YEAR);
+
+                DatePickerDialog pickerDialog = new DatePickerDialog(EditUserInfoActivity.this,
+                        new DatePickerDialog.OnDateSetListener() {
+                            @Override
+                            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+
+                                Calendar calendar1 = Calendar.getInstance();
+                                calendar1.set(year, month, dayOfMonth);
+                                et_date.setText(SimpleDateFormat.getDateInstance().format(calendar1.getTime()));
+                            }
+                        },year, month, day);
+
+                pickerDialog.show();
+
+            }
+        });
+
+
+        dref = FirebaseDatabase.getInstance().getReference("user_info").child(uid);
 
         dref.addValueEventListener(new ValueEventListener() {
             @Override
@@ -113,6 +143,8 @@ public class EditUserInfoActivity extends AppCompatActivity {
 
                 if(isfnamechange() | islnamechange() | isdatechange() | ismobchange() )
                 {
+                    Toast.makeText(EditUserInfoActivity.this, "Details Updated", Toast.LENGTH_SHORT).show();
+                    finish();
                     Log.d("values..", "onClick: ");
                 }
                 else{
