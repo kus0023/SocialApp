@@ -80,7 +80,7 @@ public class AddUserPostActivity extends AppCompatActivity {
                     final String userid = auth.getCurrentUser().getEmail().split("@")[0];
 
                     int like = 0;
-                    String date = new SimpleDateFormat("dd/mm/yyyy").format(new Date());
+                    String date = new SimpleDateFormat("dd/MM/yyyy").format(new Date());
                     String time = new SimpleDateFormat(("hh:mm")).format(new Date());
 
                     final String generatedName = new SimpleDateFormat("ddmmyyyyHHmmss").format(new Date());
