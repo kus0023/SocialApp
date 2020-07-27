@@ -48,7 +48,7 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
     private List<Post_model> postList;
 
     private DatabaseReference reference;
-    private DatabaseReference postDBReference;
+    private DatabaseReference database;
     private DatabaseReference friendReference;
 
     private String currentUserId;
@@ -88,7 +88,6 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
         addPost.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 Intent intent = new Intent(DashboardActivity.this, AddUserPostActivity.class);
                 startActivity(intent);
             }
@@ -98,7 +97,7 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
         String userid = auth.getCurrentUser().getEmail().split("@")[0];
         currentUserId = userid;
         reference = FirebaseDatabase.getInstance().getReference("user_info").child(userid);
-        postDBReference = FirebaseDatabase.getInstance().getReference("user_post");
+        database = FirebaseDatabase.getInstance().getReference();
         friendReference = FirebaseDatabase.getInstance().getReference("friends").child(userid);
 
         //getting photo of header section caption
@@ -122,51 +121,41 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
             }
         });
 
-
-
-        friendReference.addValueEventListener(new ValueEventListener() {
+        database.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                postList = new ArrayList<>();
-                for(DataSnapshot s : snapshot.getChildren()){
+                List<String> friends = new ArrayList<>();
+                List<Post_model> list = new ArrayList<>();
+                friends.add(currentUserId);
+                for(DataSnapshot table: snapshot.getChildren()){
 
-                    postDBReference.child(s.getValue().toString())
-                            .addValueEventListener(new ValueEventListener() {
-                                @Override
-                                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                    for(DataSnapshot s1: snapshot.getChildren()){
-                                        Post_model model = s1.getValue(Post_model.class);
-                                        postList.add(model);
-                                    }
-                                    Collections.shuffle(postList);
-                                    rv.setAdapter(new MyAdapter(postList));
-                                }
-
-                                @Override
-                                public void onCancelled(@NonNull DatabaseError error) {
-
-                                }
-                            });
+                    if(table.getKey()!= null && table.getKey().equals("friends")) //friends table
+                    for(DataSnapshot friend: table.getChildren()){
+                        if(friend.getKey()!= null && friend.getKey().equals(  currentUserId ))
+                            for(DataSnapshot value : friend.getChildren())
+                                friends.add(value.getValue().toString());
+//                        Log.d("value", "key: "+friend.getKey()+" values: "+friend.getValue());
+                    }
 
                 }
 
-                postDBReference.child(currentUserId).addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        for(DataSnapshot s1: snapshot.getChildren()){
-                            Post_model model = s1.getValue(Post_model.class);
-                            postList.add(model);
+                for(String s : friends){
+                    for(DataSnapshot table: snapshot.getChildren()){
 
-                        }
-                        Collections.shuffle(postList);
-                        rv.setAdapter(new MyAdapter(postList));
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
+                        if(table.getKey()!= null && table.getKey().equals("user_post")) //friends table
+                            for(DataSnapshot users: table.getChildren()){
+                                if(users.getKey()!= null && users.getKey().equals(s))
+                                    for(DataSnapshot value : users.getChildren())
+                                        list.add(value.getValue(Post_model.class));
+//                                        Log.d("value", "key: "+value.getKey()+" values: "+value.getValue());
+                            }
 
                     }
-                });
+                }
+
+                Collections.shuffle(list);
+                rv.setAdapter(new MyAdapter(list));
+
             }
 
             @Override
@@ -174,9 +163,6 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
 
             }
         });
-
-
-
 
     }
 
