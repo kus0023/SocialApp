@@ -25,7 +25,10 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.EmailAuthCredential;
+import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -104,32 +107,13 @@ public class EditUserInfoActivity extends AppCompatActivity {
             }
         });
 
-//        iv_profile.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Intent intent = new Intent(Intent.ACTION_PICK);
-//                intent.setData(MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-//                startActivityForResult(intent, BACKGROUND_PICK_CODE);
-//            }
-//        });
-//
-//        iv_back.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Intent intent = new Intent(Intent.ACTION_PICK);
-//                intent.setData(MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-//                startActivityForResult(intent, BACKGROUND_PICK_CODE);
-//            }
-//        });
-
         edit_details.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                if(isfnamechange() || islnamechange() || isdatechange() || ismobchange() )
+                if(isfnamechange() | islnamechange() | isdatechange() | ismobchange() )
                 {
-                    Toast.makeText(EditUserInfoActivity.this, "you clicked"+"update: "+et_mob.getText().toString()+" "+phone_no+"/n"+et_date.getText().toString()+" "+date+
-                            "/n"+et_fname.getText().toString()+fname, Toast.LENGTH_SHORT).show();
+                    Log.d("values..", "onClick: ");
                 }
                 else{
                     Toast.makeText(EditUserInfoActivity.this, "no update found", Toast.LENGTH_SHORT).show();
@@ -141,9 +125,12 @@ public class EditUserInfoActivity extends AppCompatActivity {
             @Override
             public void onClick(final View v) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(EditUserInfoActivity.this);
-                builder.setTitle("Delete Account").setMessage("Are You sure you want to delete?")
+                View view = getLayoutInflater().inflate(R.layout.edit_text_view_delete, null);
+                final EditText et = view.findViewById(R.id.et_pass_delete);
+                builder.setView(view);
+                builder.setTitle("Delete Account").setMessage("Please Enter Your Password")
                         .setCancelable(false)
-                        .setNeutralButton("no", new DialogInterface.OnClickListener() {
+                        .setNeutralButton("Don't Delete", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 dialog.dismiss();
@@ -152,29 +139,35 @@ public class EditUserInfoActivity extends AppCompatActivity {
                         .setPositiveButton("yes! delete", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
+                                final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                                AuthCredential credential = EmailAuthProvider.getCredential(auth.getCurrentUser().getEmail(),
+                                        et.getText().toString());
 
-                                auth.getCurrentUser().delete().addOnCompleteListener(new OnCompleteListener<Void>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<Void> task) {
-                                        if(task.isSuccessful()) {
-                                            deleteUser();
-                                            SharedPreferences sp = getSharedPreferences("UserInformation", MODE_PRIVATE);
-                                            SharedPreferences.Editor editor = sp.edit();
-                                            editor.putString("userId", "Guest");
-                                            editor.putString("password", "Guest");
-                                            editor.apply();
-                                            Intent i = new Intent(EditUserInfoActivity.this, MainActivity.class);
-                                            startActivity(i);
-                                            finish();
-                                        }
-                                    }
-                                })
-                                .addOnFailureListener(new OnFailureListener() {
-                                    @Override
-                                    public void onFailure(@NonNull Exception e) {
-                                        Toast.makeText(EditUserInfoActivity.this, "failed : "+e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
-                                    }
-                                });
+                                user.reauthenticate(credential)
+                                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<Void> task) {
+                                                SharedPreferences sp = getSharedPreferences("UserInformation", MODE_PRIVATE);
+                                                SharedPreferences.Editor editor = sp.edit();
+                                                editor.putString("userId", "Guest");
+                                                editor.putString("password", "Guest");
+                                                editor.commit();
+
+                                                deleteUser();
+
+                                                user.delete().addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                    @Override
+                                                    public void onComplete(@NonNull Task<Void> task) {
+                                                        if(task.isSuccessful()) {
+                                                            Intent intent = new Intent(EditUserInfoActivity.this, MainActivity.class);
+                                                            startActivity(intent);
+                                                            finish();
+                                                        }
+                                                    }
+                                                });
+
+                                            }
+                                        });
 
                             }
                         }).show();
@@ -195,6 +188,8 @@ public class EditUserInfoActivity extends AppCompatActivity {
         String id = currentUser.split("@")[0];
         FirebaseDatabase.getInstance().getReference("user_info").child(id).removeValue();
         FirebaseDatabase.getInstance().getReference("user_post").child(id).removeValue();
+
+        //deleting storage
 
         FirebaseStorage.getInstance().getReference("post/"+id).delete();
         FirebaseStorage.getInstance().getReference("profilePhoto/"+id).delete()

@@ -64,6 +64,17 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
         addPost = findViewById(R.id.addPost);
 
 
+        SharedPreferences sp = getSharedPreferences("UserInformation", MODE_PRIVATE);
+        SharedPreferences.Editor editor = sp.edit();
+
+        String uname = sp.getString("userId", "Guest");
+        if(uname.equals("Guest")){
+            Intent i = new Intent(this, MainActivity.class);
+            startActivity(i);
+            finish();
+        }
+
+
         drawerToggle=new ActionBarDrawerToggle(this,drawerLayout,toolbar,R.string.open,R.string.close);
         drawerToggle.syncState();
         nav_view.setNavigationItemSelectedListener(this);
@@ -99,8 +110,10 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
                 UserModel p = snapshot.getValue(UserModel.class);
 //                Log.d("valueHeader", "name = "+p.getFname()+" "+p.getLname());
 //                Log.d("valueHeader", "profile = "+p.getProfile());
-                headerusername.setText(p.getFname()+" "+p.getLname());
-                Glide.with(DashboardActivity.this).load(p.getProfile()).into(headerImgae);
+                if(p!=null) {
+                    headerusername.setText(p.getFname() + " " + p.getLname());
+                    Glide.with(DashboardActivity.this).load(p.getProfile()).into(headerImgae);
+                }
             }
 
             @Override

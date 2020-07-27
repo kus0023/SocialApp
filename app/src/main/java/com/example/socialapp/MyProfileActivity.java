@@ -61,14 +61,17 @@ public class MyProfileActivity extends AppCompatActivity {
         dref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
+
                 UserModel um=snapshot.getValue(UserModel.class);
-                name.setText(um.getFname()+" "+um.getLname());
-                email.setText(um.getEmail());
-                phone.setText(um.getPhone());
-                Glide.with(getApplicationContext())
-                        .load(um.getProfile()).into(profile);
-                Glide.with(getApplicationContext())
-                        .load(um.getBackground()).into(backprofile);
+                if(um != null) {
+                    name.setText(um.getFname() + " " + um.getLname());
+                    email.setText(um.getEmail());
+                    phone.setText(um.getPhone());
+                    Glide.with(getApplicationContext())
+                            .load(um.getProfile()).into(profile);
+                    Glide.with(getApplicationContext())
+                            .load(um.getBackground()).into(backprofile);
+                }
                 
             }
 

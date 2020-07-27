@@ -34,7 +34,7 @@ public class LoginFragment extends Fragment {
 
     private EditText et1, et2;
     private Button login;
-    private FirebaseAuth auth;
+
     SharedPreferences sharedPreferences;
     SharedPreferences.Editor editor;
     ProgressDialog pd;
@@ -47,7 +47,7 @@ public class LoginFragment extends Fragment {
         et1 = view.findViewById(R.id.et_username);
         et2 = view.findViewById(R.id.et_password);
         login = view.findViewById(R.id.btn_login_frg);
-        auth = FirebaseAuth.getInstance();
+
         pd = new ProgressDialog(getContext());
 
         pd.setTitle("Loading");
@@ -85,6 +85,9 @@ public class LoginFragment extends Fragment {
 
 
     private void signIn(final String userId, final String pass){
+        FirebaseAuth auth;
+        auth = FirebaseAuth.getInstance();
+
         auth.signInWithEmailAndPassword(userId, pass)
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
