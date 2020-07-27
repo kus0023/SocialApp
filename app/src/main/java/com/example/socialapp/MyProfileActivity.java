@@ -42,6 +42,7 @@ public class MyProfileActivity extends AppCompatActivity {
         email=findViewById(R.id.tv_myprofile_email);
         phone=findViewById(R.id.tv_myprofile_mobile);
         bedit=findViewById(R.id.btn_myprofile_edit);
+        Dob=findViewById(R.id.tv_myprofile_dob);
         bshowpost=findViewById(R.id.btn_myprofile_viewpost);
 
         bedit.setOnClickListener(new View.OnClickListener() {
@@ -67,6 +68,7 @@ public class MyProfileActivity extends AppCompatActivity {
                     name.setText(um.getFname() + " " + um.getLname());
                     email.setText(um.getEmail());
                     phone.setText(um.getPhone());
+                    Dob.setText(um.getDob());
                     Glide.with(getApplicationContext())
                             .load(um.getProfile()).into(profile);
                     Glide.with(getApplicationContext())

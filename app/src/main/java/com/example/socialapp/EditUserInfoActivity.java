@@ -91,7 +91,6 @@ public class EditUserInfoActivity extends AppCompatActivity {
                 lname = um.getLname();
                 date = um.getDob();
                 phone_no = um.getPhone();
-                Toast.makeText(EditUserInfoActivity.this, "detail" + fname + lname + date, Toast.LENGTH_LONG).show();
                 et_fname.setText(fname);
                 et_lname.setText(lname);
                 et_date.setText(date);
@@ -177,12 +176,12 @@ public class EditUserInfoActivity extends AppCompatActivity {
         
 
     }
-    @Override
-    public void onBackPressed() {
-        Intent i = new Intent(this, MainActivity.class);
-        startActivity(i);
-        finish();
-    }
+//    @Override
+//    public void onBackPressed() {
+//        Intent i = new Intent(this, MainActivity.class);
+//        startActivity(i);
+//        finish();
+//    }
 
     private void deleteUser(){
         String id = currentUser.split("@")[0];
