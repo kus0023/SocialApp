@@ -14,6 +14,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -47,11 +48,11 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
     private FloatingActionButton addPost;
     private List<Post_model> postList;
 
-    private DatabaseReference reference;
     private DatabaseReference database;
-    private DatabaseReference friendReference;
 
     private String currentUserId;
+
+    private long totalFriendReq ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,6 +84,9 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
         final TextView headerusername =  headerView.findViewById(R.id.username);
         final ImageView headerImgae = headerView.findViewById(R.id.userpic);
 
+
+
+
         rv.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
 
         addPost.setOnClickListener(new View.OnClickListener() {
@@ -96,10 +100,8 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
         FirebaseAuth auth = FirebaseAuth.getInstance();
         String userid = auth.getCurrentUser().getEmail().split("@")[0];
         currentUserId = userid;
-        reference = FirebaseDatabase.getInstance().getReference("user_info").child(userid);
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("user_info").child(userid);
         database = FirebaseDatabase.getInstance().getReference();
-        friendReference = FirebaseDatabase.getInstance().getReference("friends").child(userid);
-
         //getting photo of header section caption
         reference.addListenerForSingleValueEvent(new ValueEventListener() {
 
@@ -130,12 +132,12 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
                 for(DataSnapshot table: snapshot.getChildren()){
 
                     if(table.getKey()!= null && table.getKey().equals("friends")) //friends table
-                    for(DataSnapshot friend: table.getChildren()){
-                        if(friend.getKey()!= null && friend.getKey().equals(  currentUserId ))
-                            for(DataSnapshot value : friend.getChildren())
-                                friends.add(value.getValue().toString());
+                        for(DataSnapshot friend: table.getChildren()){
+                            if(friend.getKey()!= null && friend.getKey().equals( currentUserId ))
+                                for(DataSnapshot value : friend.getChildren())
+                                    friends.add(value.getValue().toString());
 //                        Log.d("value", "key: "+friend.getKey()+" values: "+friend.getValue());
-                    }
+                        }
 
                 }
 
@@ -156,6 +158,16 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
                 Collections.shuffle(list);
                 rv.setAdapter(new MyAdapter(list));
 
+                //getting total friend request
+                for(DataSnapshot table: snapshot.getChildren()){
+                    if(table.getKey()!= null && table.getKey().equals("friend_request")) //friends table
+                        for(DataSnapshot req: table.getChildren()){
+                            if(req.getKey()!= null && req.getKey().equals( currentUserId ))
+                                totalFriendReq = req.getChildrenCount();
+                        }
+
+                }
+
             }
 
             @Override
@@ -164,7 +176,14 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
             }
         });
 
+        Menu menu = nav_view.getMenu();
+        MenuItem req = menu.findItem(R.id.friendReq);
+        if(totalFriendReq!=0)
+            req.setTitle("Friend Request ("+totalFriendReq+")");
+
     }
+
+
 
     private void signOut(){
         SharedPreferences sharedPreferences=getSharedPreferences("UserInformation",MODE_PRIVATE);

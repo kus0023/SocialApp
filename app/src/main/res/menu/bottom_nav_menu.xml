@@ -18,7 +18,8 @@
     <item
         android:id="@+id/friendReq"
         android:icon="@drawable/ic_baseline_how_to_reg_24"
-        android:title="Friend Request" />
+        android:title="Friend Request">
+    </item>
     <item
         android:id="@+id/addFriend"
         android:icon="@drawable/ic_baseline_person_add_24"
