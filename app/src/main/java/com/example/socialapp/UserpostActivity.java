@@ -93,7 +93,6 @@ public class UserpostActivity extends AppCompatActivity {
              time=itemView.findViewById(R.id.textView8);
              photo=itemView.findViewById(R.id.postimage);
              caption=itemView.findViewById(R.id.postcaption);
-             like=itemView.findViewById(R.id.like_tv);
              delete = itemView.findViewById(R.id.btn_delete);
         }
     }
