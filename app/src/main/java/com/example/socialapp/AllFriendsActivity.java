@@ -42,6 +42,7 @@ public class AllFriendsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_all_friends);
+        setTitle("Friends");
 
         rv= findViewById(R.id.rv_allFriend);
         auth = FirebaseAuth.getInstance();

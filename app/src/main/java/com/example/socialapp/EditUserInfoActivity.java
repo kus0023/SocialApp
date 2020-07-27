@@ -64,6 +64,7 @@ public class EditUserInfoActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_user_info);
+        setTitle("Edit Profile");
 
         et_date = findViewById(R.id.et_info_date);
         et_mob = findViewById(R.id.et_info_mobile);

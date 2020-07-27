@@ -36,6 +36,9 @@ public class AddNewFriendActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_new);
+        setTitle("Add Friends");
+
+
         rv=findViewById(R.id.add_rv);
         rv.setLayoutManager(new LinearLayoutManager(this));
 
@@ -151,47 +154,50 @@ public class AddNewFriendActivity extends AppCompatActivity {
        final DatabaseReference reference2=FirebaseDatabase.getInstance().getReference("friend_request");
        final DatabaseReference reference3 = FirebaseDatabase.getInstance().getReference("friends");
 
+
        reference1.addValueEventListener(new ValueEventListener() {
            @Override
            public void onDataChange(@NonNull DataSnapshot snapshot) {
                for (DataSnapshot s : snapshot.getChildren()) {
                    final UserModel userModel = s.getValue(UserModel.class);
-                   if(!userModel.getEmail().equals(auth.getCurrentUser().getEmail())) {
-                       list1.add(userModel);
-                       reference2.child(userid).addValueEventListener(new ValueEventListener() {
-                           @Override
-                           public void onDataChange(@NonNull DataSnapshot snapshot) {
-                               for (DataSnapshot s1 : snapshot.getChildren()){
-                                   Log.d("shweta", "equels: "+s1.getValue().toString().equals(userModel.getEmail().split("@")[0]));
-                                   if(s1.getValue().toString().equals(userModel.getEmail().split("@")[0]))
-                                   {
-                                       Log.d("shweta", "onDataChange: " + s1.getValue());
-                                       list1.remove(userModel);
-                                       rv.setAdapter(new MyAdapter(list1));
+                   if(userModel!=null) {
+                       if (!userModel.getEmail().equals(auth.getCurrentUser().getEmail())) {
+                           list1.add(userModel);
+                           reference2.child(userid).addValueEventListener(new ValueEventListener() {
+                               @Override
+                               public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                   for (DataSnapshot s1 : snapshot.getChildren()) {
+                                       Log.d("shweta", "equels: " + s1.getValue().toString().equals(userModel.getEmail().split("@")[0]));
+                                       if (s1.getValue().toString().equals(userModel.getEmail().split("@")[0])) {
+                                           Log.d("shweta", "onDataChange: " + s1.getValue());
+                                           list1.remove(userModel);
+                                           rv.setAdapter(new MyAdapter(list1));
+                                       }
                                    }
                                }
-                           }
-                           @Override
-                           public void onCancelled(@NonNull DatabaseError error) {
-                           }
-                       });
 
-                       reference3.child(userid).addValueEventListener(new ValueEventListener() {
-                           @Override
-                           public void onDataChange(@NonNull DataSnapshot snapshot) {
-                               for(DataSnapshot s1 : snapshot.getChildren()){
-                                   if(s1.getValue().toString().equals(userModel.getEmail().split("@")[0])){
-                                       list1.remove(userModel);
-                                       rv.setAdapter(new MyAdapter(list1));
+                               @Override
+                               public void onCancelled(@NonNull DatabaseError error) {
+                               }
+                           });
+
+                           reference3.child(userid).addValueEventListener(new ValueEventListener() {
+                               @Override
+                               public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                   for (DataSnapshot s1 : snapshot.getChildren()) {
+                                       if (s1.getValue().toString().equals(userModel.getEmail().split("@")[0])) {
+                                           list1.remove(userModel);
+                                           rv.setAdapter(new MyAdapter(list1));
+                                       }
                                    }
                                }
-                           }
 
-                           @Override
-                           public void onCancelled(@NonNull DatabaseError error) {
+                               @Override
+                               public void onCancelled(@NonNull DatabaseError error) {
 
-                           }
-                       });
+                               }
+                           });
+                       }
                    }
                }
              MyAdapter myAdapter=new MyAdapter(list1);

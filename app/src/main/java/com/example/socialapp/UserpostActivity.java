@@ -47,7 +47,10 @@ public class UserpostActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_userpost);
+        setTitle("Your Posts");
+
         rv = findViewById(R.id.recyclerView2);
+
 
 
         rv.setLayoutManager(new LinearLayoutManager(this));

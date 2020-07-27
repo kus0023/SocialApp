@@ -38,6 +38,7 @@ public class FriendRequestActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_friend_request);
+        setTitle("Friend Requests");
 
         rv=findViewById(R.id.recyclerView3);
         rv.setLayoutManager(new LinearLayoutManager(this));

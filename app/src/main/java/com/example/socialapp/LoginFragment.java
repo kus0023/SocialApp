@@ -102,7 +102,7 @@ public class LoginFragment extends Fragment {
                         editor = sharedPreferences.edit();
                         editor.putString("userId", userId);
                         editor.putString("password", pass);
-                        editor.apply();
+                        editor.commit();
 
 //                        Toast.makeText(getContext(), "Welcome", Toast.LENGTH_SHORT).show();
                         Intent intent = new Intent(getActivity().getApplicationContext(), DashboardActivity.class);

@@ -33,6 +33,7 @@ public class UserProfilePageAcitvity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_profile_page_acitvity);
+        setTitle("Information");
 
         name=findViewById(R.id.uname);
         date=findViewById(R.id.udob);
