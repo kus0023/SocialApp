@@ -8,4 +8,6 @@
     <color name="primaryblue">#354CEA</color>
     <color name="orange">#FF9800</color>
     <color name="cart_back">#EFFAF7</color>
+    <color name="deletebtn">#F40505</color>
+
 </resources>
